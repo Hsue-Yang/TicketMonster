@@ -1,0 +1,142 @@
+﻿@model Customer
+
+@{
+    ViewData["Title"] = "AccountSettings";
+    ViewBag.Navbar = true;
+}
+
+@section topCSS{
+    <link href="~/css/user/accountsettings.css" rel="stylesheet" asp-append-version="true" />
+}
+
+@section endJS{
+    @Html.Raw(ViewBag.ToastrMessage)
+    <script src="~/js/user/account.js" asp-append-version="true"></script>
+}
+
+<article class="container my-5">
+    <h2 class="fs-1 fw-semibold mb-4">Account Settings</h2>
+    <!-- control -->
+    <section class="nav border-bottom gap-4 my-4 col-md-9 col-lg-8">
+        <button class="btn text-dark rounded-0 border-top-0 border-start-0 border-end-0 border-3 fs-5 px-0 active"
+                data-bs-toggle="pill" data-bs-target="#profile">
+            Profile
+        </button>
+       @*  <button class="btn text-dark rounded-0 border-top-0 border-start-0 border-end-0 border-3 fs-5 px-0"
+                data-bs-toggle="pill" data-bs-target="#connected_accounts">
+            Connected Accounts
+        </button> *@
+    </section>
+    <!-- content -->
+    <article class="tab-content" id="app">
+        <section class="tab-pane active show" id="profile">
+            <div class="row">
+                <div class="col-md-9 col-lg-8">
+                    <form asp-action="AccountSettings" method="post" id="app">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <!-- Details -->
+                        <section class="d-flex flex-column align-items-md-start gap-3 col-md-8">
+                            <h3 class="fs-5 fw-semibold">My Info</h3>
+                            <div class="form-group col-12">
+                                <label asp-for="FirstName" class="control-label small py-1 ps-1"></label>
+                                <input asp-for="FirstName" class="form-control rounded-1" required />
+                                <span asp-validation-for="FirstName" class="text-danger badge"></span>
+                            </div>
+                            <div class="form-group col-12">
+                                <label asp-for="LastName" class="control-label small py-1 ps-1"></label>
+                                <input asp-for="LastName" class="form-control rounded-1" required />
+                                <span asp-validation-for="LastName" class="text-danger badge"></span>
+                            </div>
+                            <div class="form-group col-12 opacity-50">
+                                <label asp-for="Birthday" class="control-label small py-1 ps-1"></label>
+                                <input asp-for="Birthday" class="form-control rounded-1 border shadow-none" type="text" asp-format="{0:yyyy-MM-dd}" readonly />
+                            </div>
+                            <input type="submit" value="Update Details" class="btn btn-primary rounded-0 fs-7 my-3 mb-4" />
+                        </section>
+                        <hr class="my-4 mb-5" />
+                        <!-- Email -->
+                        <section class="d-flex flex-column align-items-md-start gap-3 col-md-8">
+                            <h3 class="fs-5 fw-semibold">Email Address</h3>
+                            <div class="form-group col-12 form-floating flex-grow-1 opacity-50">
+                                <input asp-for="Email" class="form-control rounded-1 border shadow-none" placeholder="Email" id="Email" type="email" readonly />
+                                <label asp-for="Email" class="control-label text-body-tertiary small pt-2 h-25" for="Email">Email</label>
+                            </div>
+                            <input type="submit" value="Update Email" class="btn btn-primary rounded-0 fs-7 my-3 mb-4" />
+                        </section>
+                        <hr class="my-4 mb-5" />
+                        <!-- Phone -->
+                        <section class="d-flex flex-column align-items-md-start gap-3 col-md-8">
+                            <h3 class="fs-5 fw-semibold">Phone Number</h3>
+                            <div class="form-group col-12 form-floating flex-grow-1">
+                                <input asp-for="Phone" class="form-control rounded-1 bg-transparent" placeholder="Phone Number" id="Phone" type="tel" required />
+                                <label asp-for="Phone" class="control-label text-body-tertiary small pt-2 h-25" for="Phone">Phone Number</label>
+                                <span asp-validation-for="Phone" class="text-danger badge"></span>
+                            </div>
+                            <input type="submit" value="Update Number" class="btn btn-primary rounded-0 fs-7 my-3 mb-4" />
+                        </section>
+                        <hr class="my-4 mb-5" />
+                        <!-- Location -->
+                        <section class="d-flex flex-column align-items-md-start gap-3 col-md-8">
+                            <h3 class="fs-5 fw-semibold">Location</h3>
+                            <div class="form-group col-12">
+                                <label asp-for="Country" class="control-label small ps-1"></label>
+                                <select asp-for="Country" class="form-control form-select rounded-1">
+                                    <option selected>Taiwan</option>
+                                </select>
+                                <span asp-validation-for="Country" class="text-danger badge"></span>
+                            </div>
+                            <div class="form-group col-12 form-floating flex-grow-1">
+                                <input asp-for="Address" class="form-control rounded-1 bg-transparent" placeholder="Address" id="Address" required />
+                                <label asp-for="Address" class="control-label text-body-tertiary small pt-2 h-25" for="Phone">Address</label>
+                                <span asp-validation-for="Address" class="text-danger badge"></span>
+                            </div>
+                            <input type="submit" value="Update Location" class="btn btn-primary rounded-0 fs-7 my-3 mb-4" />
+                        </section>
+                        <!-- hidden -->
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="Password" />
+                        <input type="hidden" asp-for="CreateTime" />
+                        <input type="hidden" asp-for="ModifyTime" />
+                        <input type="hidden" asp-for="IsVerified" />
+                        <input type="hidden" asp-for="Orders" />
+                    </form>
+                </div>
+            </div>
+        </section>
+       @*  <section class="tab-pane col-md-9 col-lg-8" id="connected_accounts">
+            <h3 class="fs-4 fw-semibold mb-4 py-2">Membership Accounts</h3>
+            <!-- connected -->
+            <section class="d-flex justify-content-between align-items-center my-4 py-1">
+                <div class="d-flex align-items-center gap-3">
+                    <img src="https://cdn4.iconfinder.com/data/icons/socialcones/508/Google-1024.png" width="44" class="rounded-circle" style="aspect-ratio: 1/1" />
+                    <div class="d-flex flex-column">
+                        <span>Google Customers</span>
+                        <small class="d-none d-sm-block">Get access to exclusive ticket offers.</small>
+                    </div>
+                </div>
+                <button class="btn badge btn-primary bg-transparent text-primary px-3 p-2 me-md-3 me-lg-5" @@click="gcAlert()">Connect</button>
+            </section>
+            <section class="d-flex justify-content-between align-items-center my-4 py-1">
+                <div class="d-flex align-items-center gap-3">
+                    <img src="https://cdn1.iconfinder.com/data/icons/social-networks-15/512/facebook_social_network_logo-512.png" width="40" class="rounded-circle p-1" style="aspect-ratio: 1/1" />
+                    <div class="d-flex flex-column">
+                        <span>Facebook Customers</span>
+                        <small class="d-none d-sm-block">Get access to exclusive ticket offers.</small>
+                    </div>
+                </div>
+                <button class="btn badge btn-primary bg-transparent text-primary px-3 p-2 me-md-3 me-lg-5" @@click="gcAlert()">Connect</button>
+            </section>
+            <section class="d-flex justify-content-between align-items-center my-4 py-1">
+                <div class="d-flex align-items-center gap-3">
+                    <img src="https://cdn3.iconfinder.com/data/icons/social-network-flat-3/100/Line-512.png" width="40" class="rounded-circle p-1" style="aspect-ratio: 1/1" />
+                    <div class="d-flex flex-column">
+                        <span>Line Customers</span>
+                        <small class="d-none d-sm-block">Get access to exclusive ticket offers.</small>
+                    </div>
+                </div>
+                <button class="btn badge btn-primary bg-transparent text-primary px-3 p-2 me-md-3 me-lg-5" @@click="lineMe()">Connect</button>
+            </section>
+        </section> *@
+    </article>
+    <small class="position-fixed bottom-0 end-0 badge text-muted opacity-25">@Model?.ModifyTime</small>
+</article>

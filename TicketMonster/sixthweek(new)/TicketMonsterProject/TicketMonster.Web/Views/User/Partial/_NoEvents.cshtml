@@ -1,0 +1,8 @@
+﻿<section class="text-center">
+    <img src="https://my.ticketmaster.com/static/img/no-upcoming-events.svg" class="object-fit-contain my-4">
+    <h4>No Events</h4>
+    @if (ViewContext.RouteData.Values["action"].ToString() == "Events")
+    {
+        <p>For more info, please <a href="#" class="text-decoration-none">contact Fan Support</a></p>
+    }
+</section>

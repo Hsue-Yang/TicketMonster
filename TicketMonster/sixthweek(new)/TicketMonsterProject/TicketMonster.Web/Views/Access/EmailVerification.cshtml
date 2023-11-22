@@ -1,0 +1,39 @@
+﻿@using TicketMonster.Web.ViewModels.User.DTOs;
+@model EmailVerificationDTO
+
+@{
+    ViewData["Title"] = "EmailVerification";
+}
+
+@section topCSS{
+    <link href="~/css/access/access.css" rel="stylesheet" asp-append-version="true" />
+}
+
+@section endJS{
+    @Html.Raw(ViewBag.ToastrMessage)
+}
+
+<article class="col-lg-9 d-flex border rounded shadow m-auto gap-2 vh-100">
+    <img src="https://auth.ticketmaster.com/static/en-us/images/left-panel-image.png" class="d-none d-lg-block rounded-start" />
+
+    <section class="flex-grow-1 overflow-auto p-4">
+        <small class="badge text-body-tertiary px-0">Step 2 of 2</small>
+        <h2 class="fs-4 fw-semibold mb-4">Enter Your Email Verification</h2>
+        <span class="small">Confirming your email is an extra layer of verification that helps us confirm you’re not a bot. We’ll send you a one-time code to complete the sign up process.</span>
+        <form asp-action="EmailVerification" method="post">
+            <!-- Email -->
+            <div class="form-group col-12 form-floating flex-grow-1 my-4">
+                <input asp-for="Email" class="form-control fw-semibold border-0 shadow-none px-2" placeholder="Email" id="Email" type="email" readonly />
+                <label asp-for="Email" class="control-label small pt-2 h-25 px-1" for="Email">Please enter your Email Verification for your account:</label>
+            </div>
+            <!-- VerificationCode -->
+            <div class="form-group col-12 form-floating flex-grow-1 my-4">
+                <input asp-for="VerificationCode" class="form-control rounded-1" placeholder="Verification Code" id="VerificationCode" maxlength="6" required />
+                <label asp-for="VerificationCode" class="control-label text-body-tertiary small pt-2 h-25" for="Email">Verification Code</label>
+                <span asp-validation-for="VerificationCode" class="text-danger text-start text-wrap badge"></span>
+            </div>
+            <button type="submit" class="btn badge btn-primary rounded-1 float-end my-2 p-2 col-12 col-md-2 col-lg-3">Sign Up</button>
+        </form>
+
+    </section>
+</article>

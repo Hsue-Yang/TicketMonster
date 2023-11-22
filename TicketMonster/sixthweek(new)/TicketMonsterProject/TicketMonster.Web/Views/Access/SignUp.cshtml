@@ -1,0 +1,84 @@
+﻿@model Customer
+
+@{
+    ViewData["Title"] = "SignUp";
+}
+
+@section topCSS{
+    <link href="~/css/access/access.css" rel="stylesheet" asp-append-version="true" />
+}
+
+@section endJS{
+    @Html.Raw(ViewBag.ToastrMessage)
+    <script src="~/js/access/access.js" asp-append-version="true"></script>
+}
+
+<article class="col-lg-9 d-flex border rounded shadow m-auto gap-2 vh-100">
+    <img src="https://auth.ticketmaster.com/static/en-us/images/left-panel-image.png" class="d-none d-lg-block rounded-start" />
+
+    <section class="flex-grow-1 overflow-auto p-4">
+        <small class="badge text-body-tertiary px-0">Step 1 of 2</small>
+        <h2 class="fs-4 fw-semibold">Sign Up</h2>
+        <small>Already have a Ticketmaster Account? <a asp-action="SignIn" class="fw-semibold text-decoration-none">Sign In</a></small>
+        <form asp-action="SignUp" method="post" id="app">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <!-- Email -->
+            <div class="form-group col-12 form-floating flex-grow-1 my-4">
+                <input asp-for="Email" class="form-control rounded-1 bg-transparent" placeholder="Email Address" id="Email" type="email" required />
+                <label asp-for="Email" class="control-label text-body-tertiary small pt-2 h-25" for="Email">Email Address</label>
+                <span asp-validation-for="Email" class="text-danger badge"></span>
+            </div>
+            <!-- Password -->
+            <div class="form-group col-12 form-floating flex-grow-1 my-4">
+                <input asp-for="Password" class="form-control rounded-1 pe-5" placeholder="Password" id="Password"
+                       :type="showPassword ? 'text' : 'password'" required />
+                <label asp-for="Password" class="control-label text-body-tertiary small pt-2 h-25" for="Password">Password</label>
+                <small class="btn badge text-primary border-0" id="showPassword" @@click="passwordVisibility">{{ showPassword ? 'Hide' : 'Show' }}</small>
+                <span asp-validation-for="Password" class="text-danger text-wrap text-start badge"></span>
+            </div>
+            <div class="d-flex my-4 gap-3">
+                <!-- FirstName -->
+                <div class="form-group col-5 form-floating flex-grow-1">
+                    <input asp-for="FirstName" class="form-control rounded-1 bg-transparent" placeholder="FirstName" id="FirstName" required />
+                    <label asp-for="FirstName" class="control-label text-body-tertiary small pt-2 h-25" for="FirstName">FirstName</label>
+                    <span asp-validation-for="FirstName" class="text-danger text-wrap text-start badge"></span>
+                </div>
+                <!-- LastName -->
+                <div class="form-group col-5 form-floating flex-grow-1">
+                    <input asp-for="LastName" class="form-control rounded-1 bg-transparent" placeholder="LastName" id="LastName" required />
+                    <label asp-for="LastName" class="control-label text-body-tertiary small pt-2 h-25" for="LastName">LastName</label>
+                    <span asp-validation-for="LastName" class="text-danger text-wrap text-start badge"></span>
+                </div>
+            </div>
+            <div class="d-flex my-4 gap-3">
+                <!-- Phone -->
+                <div class="form-group col-5 form-floating flex-grow-1">
+                    <input asp-for="Phone" class="form-control rounded-1 bg-transparent" placeholder="Phone" id="Phone" type="tel" required />
+                    <label asp-for="Phone" class="control-label text-body-tertiary small pt-2 h-25" for="Phone">Phone</label>
+                    <span asp-validation-for="Phone" class="text-danger text-wrap text-start badge"></span>
+                </div>
+                <!-- Birthday -->
+                <div class="form-group col-5 form-floating flex-grow-1">
+                    <input asp-for="Birthday" class="form-control rounded-1 bg-transparent" placeholder="Birthday" id="Birthday" type="date" required />
+                    <label asp-for="Birthday" class="control-label text-body-tertiary small pt-2 h-25" for="Birthday">Birthday</label>
+                    <span asp-validation-for="Birthday" class="text-danger badge"></span>
+                </div>
+            </div>
+            <!-- Country -->
+            <div class="form-group col-4 my-1">
+                <select asp-for="Country" class="form-control form-select rounded-1 border-2 border-light">
+                    <option selected>Taiwan</option>
+                </select>
+                <span asp-validation-for="Country" class="text-danger badge"></span>
+            </div>
+            <!-- Address -->
+            <div class="form-group col-12 form-floating flex-grow-1 mb-4">
+                <input asp-for="Address" class="form-control rounded-1 bg-transparent" placeholder="Address" id="Address" required />
+                <label asp-for="Address" class="control-label text-body-tertiary small pt-2 h-25" for="Address">Address</label>
+                <span asp-validation-for="Address" class="text-danger badge"></span>
+            </div>
+            <small class="badge text-body-tertiary text-wrap text-start">By continuing this page, you agree to the <a href="https://lin.ee/etG3Xui" class="text-decoration-none">Terms of Use</a> and understand that information will be used as described in our <a href="https://lin.ee/etG3Xui" class="text-decoration-none">Privacy Policy</a>.</small>
+            <button type="submit" class="btn badge btn-primary rounded-1 float-end my-2 p-2 col-12 col-md-2 col-lg-3">Next</button>
+        </form>
+    </section>
+</article>

@@ -1,0 +1,376 @@
+﻿@{
+	
+	ViewData["Title"] = "ECharts";
+}
+
+@section topCSS{
+	<!-- 引入 ECharts 样式 -->
+	<link href="~/css/echarts.css" rel="stylesheet" />
+}
+<div class="container-fluid px-4" id="app">
+	@* <h1 class="mt-4">Event報表相關</h1> *@
+	<div id="title" style="height: 100%"></div>
+	
+	<ol class="breadcrumb mb-4">
+		<li class="breadcrumb-item active">About Events</li>
+	</ol>
+	<div class="row">
+		<div class="col-xl-6 col-12">
+			<div class="card mb-4 justify-content-center">
+				<div class="card-header">
+					<p><i class="fas fa-chart-area me-1"></i>最受歡迎活動前5名 </p>
+				</div>
+				<div id="barChart" class="card-body" style=" height: 400px"></div>
+			</div>
+		</div>
+		<div class="col-xl-6 col-12">
+			<div class="card mb-4 justify-content-center">
+				<div class="card-header">
+					<p><i class="fas fa-chart-bar me-1"></i>子類別活動場數</p>
+
+				</div>
+				<div id="circleChart" class="card-body" style=" height: 400px"></div>
+			</div>
+		</div>
+		<div class="col-xl-6 col-12">
+			<div class="card mb-4 justify-content-center">
+				<div class="card-header">
+					<p><i class="fas fa-chart-bar me-1"></i>每月總活動數</p>
+
+				</div>
+				<div id="lineChart" class="card-body" style=" height: 400px"></div>
+			</div>
+		</div>
+		<div class="col-xl-6 col-12">
+			<div class="card mb-4 justify-content-center">
+				<div class="card-header">
+					<p><i class="fas fa-chart-bar me-1"></i>各場館活動數</p>
+				</div>
+				<div id="venueBarChart" class="card-body" style=" height: 400px"></div>
+			</div>
+		</div>
+	</div>
+		<div class="col-xl-6 col-12">
+			<div class="card mb-4 justify-content-center">
+				<div class="card-header">
+					<p><i class="fas fa-chart-area me-1"></i>最受歡迎場館Top 3 </p>
+				</div>
+				<div id="barCharts" class="card-body" style=" height: 400px"></div>
+			</div>
+		</div>
+	</div>
+
+
+</div>
+
+@section endJs{
+	<!-- 引入 ECharts 的 CDN -->
+	<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+	<!-- Echarts 圖表設定-->
+	@* <script src="~/assets/demo/echarts.js"></script> *@
+	<script>
+		Vue.createApp({
+			data: function () {
+				return {
+					CircleData: [],
+					BarData: [],
+					BarEventName: [],
+					BarPopular: [],
+					LineChartData: [],
+					VenueBarChart:[],
+					VenueName:[],
+					VenueEventNum:[],
+					BarDatas:[],
+				}
+			},
+			mounted() {
+				this.renderTitle();
+				this.getCircleData();
+				this.getBarData();
+				this.getLineData();
+				this.getVenueBarChartData();
+				this.getBarDatas();
+			},
+			methods: {
+				getCircleData: function () {
+					let vue = this;
+					axios.get('/api/DashBoard/GetSubCategoryCountInEvent')
+						.then(res => {
+							vue.CircleData = res.data.map(item => {
+								return {
+									value: item.SubCategoryCount,
+									name: item.SubCategoryName
+								}
+							});
+							// console.log(res.data);
+							this.renderCircleChart();
+						});
+				},
+				getLineData() {
+					let vue = this;
+					axios.get('/api/DashBoard/GetEventsPerMonth')
+						.then(res => {
+							console.log(res.data)
+							vue.LineChartData = res.data
+							console.log(vue.LineChartData);
+
+							this.renderLineChart();
+						});
+				},
+				//受歡迎柱狀圖
+				getBarData: function () {
+					let vue = this;
+					axios.get('/api/DashBoard/GetPopularEventTop5')
+						.then(res => {
+							vue.BarData = res.data
+							this.BarEventName = this.BarData.map(item => item.EventName);
+							this.BarPopular = this.BarData.map(item => item.EventPopular)
+							this.renderBarChart();
+						})
+				},
+				getVenueBarChartData: function () {
+					let vue = this;
+					axios.get('/api/DashBoard/GetVenueEventsNum')
+						.then(res => {
+							vue.VenueBarChart = res.data
+							console.log(res.data)
+							this.VenueName = this.VenueBarChart.map(item => item.VenueName);
+							this.VenueEventNum = this.VenueBarChart.map(item => item.eventNum)
+							console.log(this.VenueName);
+							this.renderVenueBarChart()
+						})
+				}, 
+				renderVenueBarChart() {
+					let venueBarArea = echarts.init(document.getElementById('venueBarChart'));
+
+					venueBarArea.setOption({
+						// 很酷
+						// dataZoom: [
+						// 	{
+						// 		type: 'slider', // 类型为滑动条
+						// 		xAxisIndex: 0, // 指定要缩放的 X 轴
+						// 		start: 0, // 起始位置
+						// 		end: 100 // 结束位置
+						// 	}
+						// ],
+						tooltip: {
+							trigger: 'item',
+							formatter: '{b}<br/>活動數: {c}場 '
+						},
+						xAxis: {
+							data: this.VenueName,
+							axisLabel: {
+								interval:0,
+								rotate:45,
+								fontsize:10,
+								formatter: function (value) {
+									// 在这里自定义标签的显示
+									if (value.length > 10) {
+										return value.substring(0, 10) + '...'; // 仅显示前10个字符，并添加省略号
+									}
+									return value;
+								}
+							}
+						},
+						
+						yAxis: {},
+						series: [
+							{
+								name: '活動數',
+								type: 'bar',
+								data: this.VenueEventNum
+							}
+						]
+					});
+				},
+				renderBarChart() {
+					let barArea = echarts.init(document.getElementById('barChart'));
+
+					barArea.setOption({
+						tooltip: { 
+							trigger: 'item',
+							formatter: '{b}<br/>售出張數: {c}張 '
+						},
+						xAxis: {
+							data: this.BarEventName,
+							axisLabel: {
+								interval: 0,
+								// rotate: 45,
+								fontsize: 10,
+								formatter: function (value) {
+									// 在这里自定义标签的显示
+									if (value.length > 10) {
+										return value.substring(0, 10) + '...'; // 仅显示前10个字符，并添加省略号
+									}
+									return value;
+								}
+							}
+						},
+						yAxis: {},
+						series: [
+							{
+								name: '售出張數',
+								type: 'bar',
+								data: this.BarPopular,
+								itemStyle: {
+									color: function(params){
+										if (params.data > 40) {
+											return 'red';  // 柱子颜色大于50的设为红色
+										} else {
+											return 'lightgreen';  // 柱子颜色小于等于50的设为蓝色
+										}
+									}
+								}
+							}
+						]
+					});
+				},
+				renderCircleChart() {
+					let circleArea = echarts.init(document.getElementById('circleChart'));
+					circleArea.setOption({
+						legend: {
+							top: 'bottom',
+						},
+						tooltip: {
+							trigger: 'item'
+						},
+						series: [
+							{
+								name: '本活動數量',
+								type: 'pie',
+								avoidLabelOverlap: true,
+								radius: '55%',
+								center: ['50%', '50%'],
+								data: this.CircleData
+							}
+						],
+						emphasis: {
+							label: {
+								show: true,
+								fontSize: '20',
+								fontWeight: 'bold',
+								distance: 20
+							},
+							labelLine: {
+								length: 20 // 调整标签与数据元素之间的距离
+							},
+							itemStyle: {
+								shadowBlur: 10,
+								shadowOffsetX: 0,
+								shadowColor: 'rgba(0, 0, 0, 0.5)'
+							}
+						},
+
+					})
+				},
+				renderLineChart() {
+					let line = echarts.init(document.getElementById('lineChart'));
+
+					line.setOption({
+						tooltip: {trigger:'item'},
+						xAxis: {
+							type:'category',
+							data: this.LineChartData.map(item => item.EventMonth)
+						},
+						yAxis: {
+							type: 'value'
+						},
+						series: [
+							{
+								name: '當月場數',
+								type: 'line',
+								smooth: true,
+								data: this.LineChartData.map(item=> item.eventNum)
+							}
+						]
+					});
+				},
+			
+				renderTitle() {
+					let title = echarts.init(document.getElementById('title'));
+					title.setOption({
+						graphic: {
+							elements: [
+								{
+									type: 'text',
+									left: 'left',
+									top: 'center',
+									style: {
+										text: 'Ticket Monster',
+										fontSize: 60,
+										fontWeight: 'bold',
+										lineDash: [0, 800],
+										lineDashOffset: 0,
+										fill: 'transparent',
+										stroke: '#000',
+										lineWidth: 1
+									},
+									keyframeAnimation: {
+										duration: 4000,
+										loop: false,
+										keyframes: [
+											{
+												percent: 0.7,
+												style: {
+													fill: 'transparent',
+													lineDashOffset: 200,
+													lineDash: [200, 0]
+												}
+											},
+											{
+												// Stop for a while.
+												percent: 0.8,
+												style: {
+													fill: 'transparent'
+												}
+											},
+											{
+												percent: 1,
+												style: {
+													fill: 'blue'
+												}
+											}
+										]
+									}
+								}
+							]
+						}
+					});
+				},
+				//受歡迎場館bar charts
+				getBarDatas: function () {
+					let vue = this;
+					axios.get('/api/DashBoard/GetPopularVenueTop3')
+						.then(res => {
+							vue.BarDatas = res.data
+							this.BarVenueName = this.BarDatas.map(item => item.VenueName);
+							this.BarPopular = this.BarDatas.map(item => item.VenuePopular)
+							this.renderBarCharts();
+						})
+				},
+				renderBarCharts() {
+					let barArea = echarts.init(document.getElementById('barCharts'));
+
+					barArea.setOption({
+						tooltip: {
+							trigger: 'item',
+							formatter: '{b}<br/>場館使用數: {c}次 '
+						},
+						xAxis: {
+							data: this.BarVenueName
+						},
+						yAxis: {},
+						series: [
+							{
+								name: '場館使用數',
+								type: 'bar',
+								data: this.BarPopular
+							}
+						]
+					});
+				},
+			},
+		}).mount('#app')
+	</script>
+}
+

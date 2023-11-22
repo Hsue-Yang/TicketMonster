@@ -1,0 +1,279 @@
+﻿@using TicketMonster.Web.ViewModels.Home;
+@model HomePageViewModel
+@{
+    ViewBag.Navbar = true;
+    ViewBag.Footer = true;
+    ViewData["Title"] = "Home";
+}
+
+@section topCSS{
+    <style>
+        .searchbox h1, h2 {
+            color: white;
+        }
+
+        .card-titleurl {
+            font-size: 18px;
+        }
+
+        .card {
+            border: none;
+        }
+
+        .cardmain-title {
+            font-size: 24px;
+            color: black;        
+            padding: 30px 10px 10px;
+            font-weight: bold;
+        }
+
+            .cardmain-title span {
+                font-size: 16px;
+                color: gray;
+                font-weight: lighter;
+            }
+
+        .btn {
+            border-radius: 10em;
+            font-size: 14px;
+        }
+
+            .btn img {
+                border-radius: 10em;
+            }
+
+        .pic-text a,
+        p {
+            font-size: 14px;
+            flex-grow: 1;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            margin-left: 5px;
+            text-decoration: none;
+        }
+
+        .pic-text :first-child {
+            font-size: 20px;
+            color: black
+        }
+
+        .drug img {
+            margin-top: 8px;
+            margin-bottom: 8px;
+            border-radius: 50%;
+        }
+
+        .drug p {
+            padding-left: 10px;
+        }
+
+        .drug {
+            border: solid gray 0.6px;
+            border-radius: 5em;
+            display: flex;
+            align-items: center;
+            width: 49%;
+            margin-left: 1%;
+        }
+
+
+        swiper-container {
+          width: 100%;
+          height: 100%;
+        }
+
+        swiper-slide {
+          text-align: center;
+          font-size: 18px;
+          background: #fff;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        swiper-slide img {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+  
+
+
+        @@media (min-width: 992px) {
+            .ticket img {
+                vertical-align: top;
+                transition: 1s;
+                transform: scale(1);
+            }
+
+            .ticket:hover img {
+                transform: scale(1.2);
+            }
+
+            .ticket {
+                position: relative;
+                border: none;
+            }
+
+            .pic-text {
+                position: absolute;
+                background-color: black;
+                bottom: 5px;
+                left: 20px;
+                padding-right: 10px;
+                padding-left: 3px;
+                opacity: 0.6;
+                width: auto;
+            }
+
+                .pic-text :first-child {
+                    padding: 3px 0px 0px 0px;
+                    font-size: 16px;
+                    color: white;
+                }
+
+                .pic-text :nth-child(2) {
+                    padding: 0px 0px 3px 0px;
+                    font-size: 14px;
+                    color: white;
+                }
+
+            .drug {
+                width: 24%;
+                margin-left: 1%;
+            }
+    
+        }
+    </style>
+    <link href="~/daterangepicker/daterangepicker.css" rel="stylesheet" />
+}
+
+@section topJS{
+    <script src="~/daterangepicker/moment.js"></script>
+    <script src="~/daterangepicker/daterangepicker.js"></script>
+}
+
+@section searchbox{
+    <div class="background">
+        <div class="container-fluid bg-dark pb-5 searchbox">
+            <partial name="_SearchPartial" model="Model.SearchBoxDropDown" />
+        </div>
+    </div>
+}
+
+@section endJS{
+    @Html.Raw(ViewBag.ToastrMessage)
+    <script>
+        $('input[name="dates"]').daterangepicker({
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Futrue 7 Days': [moment(), moment().subtract(-6, 'days')],
+                'Future 30 Days': [moment(), moment().subtract(-29, 'days')],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            },
+            "showCustomRangeLabel": false,
+            "alwaysShowCalendars": true,
+            "startDate": moment(),
+            "endDate": moment().endOf('month')
+        }, function (start, end, label) {
+            console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+        });
+    </script>
+    }
+
+<!-- 幻燈片 -->
+<div class="container pt-5 swiper">
+    <div class="row col-sm-10 col-md-10 col-lg-9 col-xl-9 mx-auto">
+        <swiper-container class="mySwiper" slides-per-view="3" pagination="true" pagination-clickable="true" navigation="true" space-between="10" loop="true">
+            @foreach (var item in Model.ShowSliderPic)
+            {
+                    <swiper-slide>
+                            <a href="/Purchase?id=@item.EventId">   <img src="@item.EventPic"></a>
+                    </swiper-slide>
+            }
+        </swiper-container>
+    </div>
+</div>
+<!-- 幻燈片 -->
+
+@* <div class="container px-5">
+    <h2 class="col-12 mt-5 mb-2 cardmain-title">Recently Viewed <br><span>Jump back into the action.</span></h2>
+
+    <div class="row d-flex justify-content-center">
+        <div class="drug my-3">
+            <img src="./image/Recent Viewed-1.webp">
+            <p>Dallas Cowboys</p>
+        </div>
+        <div class="drug my-3 ">
+            <img src="./image/Recent Viewed-2.webp">
+            <p>Lionel Richie</p>
+        </div>
+        <div class="drug  my-3 ">
+            <img src="./image/Recent Viewed-3.webp">
+            <p>Guns N' Roses</p>
+        </div>
+        <div class="drug my-3">
+            <img src="./image/Recent Viewed-4.webp">
+            <p>Seattle Mariners</p>
+        </div>
+        <div class="drug  my-3">
+            <img src="./image/Recent Viewed-5.webp">
+            <p>Toronto Blue Jays</p>
+        </div>
+        <div class="drug  my-3">
+            <img src="./image/Recent Viewed-6.webp">
+            <p>Chicago White Sox</p>
+        </div>
+        <div class="drug my-3">
+            <img src="./image/Recent Viewed-7.webp">
+            <p>Dallas Cowboys</p>
+        </div>
+        <div class="drug my-3">
+            <img src="./image/Recent Viewed-8.webp">
+            <p>Arizona Diamondbacks</p>
+        </div>
+    </div>
+</div> *@
+
+<div class="container px-5">
+
+    <!-- Category -->
+    <h2 class="col-12 mt-5 mb-2 cardmain-title">Browse by Category</h2>
+    <div class="row col-12 context mx-auto">
+        @foreach (var item in Model.CategoryCard)
+        {
+            <div class="ticket col-sm-12 col-lg-3 d-flex mt-2">
+                <div class="pic col-sm-2 col-lg-12 overflow-hidden rounded">                  
+                    <a href="~/Category/@item.CategoryId"> <img class="w-100" src="@item.CategoryPic"></a>
+                </div>
+                <div class="pic-text col-10 d-flex flex-column rounded ">
+                    <a href="~/Category/@item.CategoryId">@item.CategoryName</a>         
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- SubCategory -->
+    <h2 class="col-12 mt-5 mb-2 cardmain-title">Browse by SubCategory</h2>
+    <div class="row col-12 context mx-auto">
+        @foreach (var item in Model.SubCategoryCard)
+        {
+            <div class="ticket col-sm-12 col-lg-3 d-flex mt-2">
+                <div class="pic col-sm-2 col-lg-12 overflow-hidden rounded">
+                    <a href="~/Category/@item.CategoryId/@item.SubCategoryId"> <img class="w-100" src="@item.CategoryPic"></a>               
+                </div>
+                <div class="pic-text col-10 d-flex flex-column rounded ">
+                    <a href="~/Category/@item.CategoryId/@item.SubCategoryId">@item.CategoryName</a>        
+                </div>
+            </div>
+        }
+    </div>
+
+    @* 針對Category去分類的排卡 *@
+    <partial name="_WidgetPartial" model="Model.HomePageCategoryCard" />
+</div>

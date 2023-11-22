@@ -1,0 +1,8 @@
+﻿@using TicketMonster.ApplicationCore.Extensions;
+@model Order
+
+@{
+    var orderId = Model.Id.ToString().ToSHA256();
+}
+
+@orderId.Substring(0, 2)-@orderId.Substring(2, 5)/@orderId.Substring(7, 3)

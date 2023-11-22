@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "UsersTable";
+}
+
+@section topCSS{
+    <link href="~/css/userstable.css" rel="stylesheet" asp-append-version="true" />
+}
+
+@section endJS{
+    <script src="~/js/userstable.js" asp-append-version="true"></script>
+}
+
+<section class="container" id="app">
+    <h1 class="fw-semibold mt-4">Users Table</h1>
+    <!-- breadcrumb -->
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item badge"><a href="/Dashboard/Index">Dashboard</a></li>
+            <li class="breadcrumb-item active badge">Users Table</li>
+        </ol>
+    </nav>
+    <!-- search -->
+    <section class="form-group text-body-tertiary position-relative py-2">
+        <i class="fa-solid fa-magnifying-glass position-absolute m-1 p-2"></i>
+        <input type="text" class="form-control px-5" placeholder="Search..." v-model="searchValue">
+    </section>
+    <!-- table -->
+    <easy-data-table :headers="headers" :items="items" :search-value="searchValue" header-text-direction="center" body-text-direction="center" theme-color="#888" :loading="loading" :rows-per-page="10" alternating border-cell buttons-pagination show-index>
+        <template #item-operation="item">
+            <div class="operation-wrapper">
+                <button class="btn border-0 shadow-none" @@click="showUserOrders(item)"><i class="fa-solid fa-barcode"></i></button>
+            </div>
+        </template>
+    </easy-data-table>
+</section>

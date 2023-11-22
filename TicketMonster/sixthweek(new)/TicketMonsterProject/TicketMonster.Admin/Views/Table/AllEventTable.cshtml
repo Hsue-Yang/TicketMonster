@@ -1,0 +1,76 @@
+﻿<div id="app">
+    <easy-data-table :headers="headers"
+                     :items="items" />
+</div>
+
+@section endJS{
+    <script>
+        const { createApp, ref, onMounted } = Vue;
+
+        const App = {
+
+            components: { EasyDataTable: window["vue3-easy-data-table"] },
+            setup() {
+                const headers = ref([
+                    { text: "ID", value: "ID", sortable: true },
+                    { text: "Event Name", value: "EventName" },
+                    { text: "Category Name", value: "CategoryName" },
+                    { text: "SubCategory Name", value: "SubCategoryName" },
+                    { text: "Venue Name", value: "VenueName" },
+                    { text: "Event Date", value: "EventDate", sortable: true },
+                    { text: "Total Time", value: "TotalTime", sortable: true },
+                    { text: "Is Deleted", value: "IsDeleted" },
+                    { text: "Create Time", value: "CreateTime", sortable: true },
+                    { text: "Modify Time", value: "ModifyTime", sortable: true },
+                    { text: "Create By", value: "CreateBy" },
+                    { text: "Last Edit By", value: "LastEditBy" }           
+                ]);
+
+                const items = ref([]);
+                const loading = ref(false);
+
+                const getAll = () => {
+                    // 在開始載入資料時，設置 loading 為 true
+                    loading.value = true;
+                    axios.get('/api/EventTable/GetAllEvents')
+                        .then(res => {
+                            if (res.status == 200) {
+                                // 成功載入資料後，設置 items，並將 loading 設置為 false
+                                var result = res.data
+                                result.forEach(element => {
+                                    //每個物件最後加上 Actions: '<button class="btn btn-primary">編輯</button> <button class="btn btn-danger">刪除</button>'
+                                    element.Actions = '<button>編輯</button> <button>刪除</button>';
+
+                                });
+                                items.value = result;
+                            }
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        })
+                        .finally(() => {
+                            // 無論成功或失敗，都將 loading 設置為 false
+                            loading.value = false;
+                        });
+                };
+
+
+                // 在 Vue 3 中使用 onMounted 鉤子執行初始化
+                onMounted(() => {
+                    getAll();
+                });
+
+                return {
+                    headers,
+                    items,
+                    loading
+                };
+            }
+
+        };
+        createApp(App).mount("#app");
+    </script>
+
+
+                        }
+

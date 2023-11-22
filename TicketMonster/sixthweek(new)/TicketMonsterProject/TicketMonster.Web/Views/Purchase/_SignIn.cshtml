@@ -1,0 +1,70 @@
+﻿@model Customer
+
+<div class="modal fade"
+     id="signinModal"
+     tabindex="-1"
+     aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body d-flex welcome-body">
+                <div class="col-md-4 welcome-column">
+                    <div class="welcome-back ps-4 pe-4 pt-4">
+                        <h1 class="welcome-title">Welcome <br />Back</h1>
+                        <div class="welcome-text pt-3">
+                            <p class="text">
+                                Discover millions of events, get alerts about your
+                                favorite artists, teams, plays and more — plus
+                                always- secure, effortless ticketing.
+                            </p>
+                        </div>
+                        <div class="welcome-underline"></div>
+                    </div>
+                </div>
+                <form asp-action="SignIn" method="post" class="col-md-8 col-12 signin-column">
+                    <div class="signin-header d-flex justify-content-between pt-4 ps-4 pe-4">
+                        <h2 class="signin-title">Sign In</h2>
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="signin-main ps-4 pe-4">
+                        <p class="new">
+                            New to Ticketmonster?
+                            <button asp-action="SignUp" class="btn signup-btn">Sign Up</button>
+                        </p>
+                        <div class="signin-input mt-4">
+                            <div class="email d-flex flex-column">
+                                <label asp-for="Email" class="email-address" for="email-address">Email Address</label><input asp-for="Email" type="email" id="email-address" required />
+                            </div>
+                            <div class="password d-flex flex-column pt-4">
+                                <label asp-for ="Password" class="password-show" for="password-show">Password</label><input asp-for="Password" type="password" id="password-show" :type="showPassword ? 'text' : 'password'" required />
+                            </div>
+                            <div class="forgot-pass pt-4 d-flex justify-content-between">
+                                <div class="remember-me">
+                                    <label for="Remember" class="badge text-dark"><input type="checkbox" id="Remember" name="remember" class="align-middle me-2 mb-1" checked>Remember Me</label>
+                                </div>
+                                <button asp-action="ForgotPassword_Email" class="btn p-0 pass-btn">
+                                    Forget Password?
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="signin-memo ps-4 pe-4 pt-3">
+                        <div class="By-memo">
+                            By continuing past this page, you agree to the
+                            <a class="sign-term" href="#"> Terms of Use </a> and
+                            understand that information will be used as
+                            described in our
+                            <a class="sign-privacy" href="#"> Privacy Policy </a>.
+                        </div>
+                        <div class="sign-btn d-flex justify-content-end pt-3">
+                            <button asp-controller="Access" asp-action="SignIn" type="submit" class="btn signin-btn">Sign In</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

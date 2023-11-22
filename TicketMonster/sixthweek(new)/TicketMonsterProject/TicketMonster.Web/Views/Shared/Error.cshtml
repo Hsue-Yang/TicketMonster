@@ -1,0 +1,25 @@
+﻿@{ Layout = null; }
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/lib/toastr.js/toastr.min.css" rel="stylesheet" />
+    <title>Error</title>
+</head>
+<body class="bg-dark overflow-hidden">
+    <div id="app">
+        <h1 class="display-1 fw-bold text-center text-light-emphasis opacity-50 mt-5">404 NOT FOUND</h1>
+        <a asp-controller="HomePage" asp-action="HomePageView" v-for="img in ufoS" data-toggle="tooltip" title="按我帶你 go home ~~">
+            <img src="https://cdn4.iconfinder.com/data/icons/seo-marketing-53/64/seo_404_error_page_web_missing_ufo-1024.png" :style="{ left: img.x, top: img.y, rotate: img.rotate }" :width="img.width" class="position-absolute" />
+        </a>
+        <img v-for="img in monsterS" :src="'https://cdn0.iconfinder.com/data/icons/monster-4-1/512/MonsterV3-'+img.src+'-1024.png'" :style="{ left: img.x, top: img.y, rotate: img.rotate }" :width="img.width" class="position-absolute opacity-75" data-toggle="tooltip" title="滾~ 不幫~" />
+    </div>
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <script src="~/lib/toastr.js/toastr.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/vue/dist/vue.global.js"></script>
+    <script src="~/js/error/error.js" asp-append-version="true"></script>
+</body>
+</html>

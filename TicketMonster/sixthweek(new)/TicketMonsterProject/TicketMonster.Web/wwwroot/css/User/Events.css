@@ -1,0 +1,23 @@
+﻿body::-webkit-scrollbar,
+.overflow-auto::-webkit-scrollbar {
+    display: none
+}
+
+button.active {
+    border-color: #026cdf !important;
+}
+
+.fs-7{
+    font-size: .87rem;
+}
+
+.mh-11 {
+    max-height: 11rem
+}
+
+@media print {
+    .btn,
+    body article section article:not(#print-bill) {
+        display: none
+    }
+}

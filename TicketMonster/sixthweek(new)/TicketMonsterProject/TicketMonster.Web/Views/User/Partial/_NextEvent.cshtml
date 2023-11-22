@@ -1,0 +1,31 @@
+﻿@using System.Globalization;
+@model Order
+
+<article class="position-relative bg-black rounded">
+    <section class="col-12 col-md-7">
+        <img src="@Model.EventPic" class="w-100 object-fit-cover rounded rounded-md-none opacity-lg-75 ratio-768x576 ratio-md-992x576" alt="@Model.Id">
+    </section>
+    <section class="col-12 col-md-5 position-absolute top-0 end-0 bottom-0 d-flex flex-column justify-content-center align-items-start text-light rounded p-2 px-4"
+             style="background-color: #000000b3">
+        <span class="badge bg-primary rounded-pill fw-semibold m-1 mb-3">@Model.EventDate.ToString("ddd · MMM d · HH:mm", new CultureInfo("en-US"))</span>
+        <h3 class="fs-5 text-truncate w-100 lh-1 px-2">@Model.EventName</h3>
+        <p class="lh-1 px-2">@Model.VenueLocation</p>
+        <section class="d-flex text-center gap-3 lh-1 px-2">
+            <div class="d-flex flex-column">
+                <b class="fs-5">@((Model.EventDate - DateTime.Now).Days)</b>
+                <strong class="badge">DAYS</strong>
+            </div>
+            <div class="d-flex flex-column">
+                <b class="fs-5">@((Model.EventDate - DateTime.Now).Hours)</b>
+                <strong class="badge">HOURS</strong>
+            </div>
+            <div class="d-flex flex-column">
+                <b class="fs-5">@((Model.EventDate - DateTime.Now).Minutes)</b>
+                <strong class="badge">MINS</strong>
+            </div>
+        </section>
+        <a asp-action="EventDetails" asp-route-id="@Model.Id" class="btn badge btn-light bg-transparent text-light fw-normal rounded-1 m-1 mt-3">
+            View Event Details
+        </a>
+    </section>
+</article>

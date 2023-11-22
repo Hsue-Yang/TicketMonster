@@ -1,0 +1,85 @@
+﻿.navbar-collapse ul li {
+    transition: .7s;
+}
+
+    .navbar-collapse ul li:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+
+.navbar-nav li:hover a {
+    color: white;
+    /* 保留連結內文字的原始顏色 */
+}
+
+
+.outerlink a {
+    font-size: 10px;
+    text-decoration: none;
+}
+
+/* 手風琴 */
+.teamPic {
+    display: none;
+}
+
+    .teamPic img {
+        width: 100%;
+        vertical-align: top;
+        aspect-ratio: 2/1;
+        object-fit: contain;
+    }
+
+.accordion span {
+    font-size: 10px;
+    color: gray;
+}
+
+.lineup {
+    display: none;
+}
+
+    .lineup img {
+        width: 100%;
+        vertical-align: top;
+        /*object-fit:cover;*/
+        /* aspect-ratio:2/1;*/
+    }
+
+.accordion-button:focus {
+    box-shadow: none;
+}
+
+.seeticket {
+    background-color: #026cdf;
+    color: white;
+}
+
+    .seeticket:hover {
+        background-color: rgba(5, 5, 215, 0.764);
+        color: white;
+    }
+
+
+/* -------------------------------------------------------- */
+.loadbtn {
+    transition: .5s;
+    padding: 5px 48px;
+    background: white;
+    border: 1px solid blue;
+}
+
+    .loadbtn:hover {
+        background-color: rgb(202, 230, 242);
+    }
+
+@media screen and (min-width: 768px) {
+    .lineup {
+        display: block;
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .teamPic {
+        display: block;
+    }
+}

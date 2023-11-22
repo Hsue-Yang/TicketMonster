@@ -1,0 +1,46 @@
+﻿@model Customer
+
+@{
+    ViewData["Title"] = "SignIn";
+}
+
+@section topCSS{
+    <link href="~/css/access/access.css" rel="stylesheet" asp-append-version="true" />
+}
+
+@section endJS{
+    @Html.Raw(ViewBag.ToastrMessage)
+    <script src="~/js/access/access.js" asp-append-version="true"></script>
+}
+
+<article class="col-lg-9 d-flex border rounded shadow m-auto gap-2 vh-100">
+    <img src="https://auth.ticketmaster.com/static/en-us/images/left-panel-image.png" class="d-none d-lg-block rounded-start" />
+
+    <section class="flex-grow-1 overflow-auto p-4">
+        <h2 class="fs-4 fw-semibold">Sign In</h2>
+        <small>New to Ticketmaster? <a asp-action="SignUp" class="fw-semibold text-decoration-none">Sign Up</a></small>
+        <form asp-action="SignIn" method="post" id="app">
+            <div asp-validation-summary="ModelOnly" class="text-danger fw-semibold small"></div>
+            <!-- Email -->
+            <div class="form-group col-12 form-floating flex-grow-1 my-4">
+                <input asp-for="Email" class="form-control rounded-1 bg-transparent" placeholder="Email Address" id="Email" type="email" required />
+                <label asp-for="Email" class="control-label text-body-tertiary small pt-2 h-25" for="Email">Email Address</label>
+                <span asp-validation-for="Email" class="text-danger badge"></span>
+            </div>
+            <!-- Password -->
+            <div class="form-group col-12 form-floating flex-grow-1 my-4">
+                <input asp-for="Password" class="form-control rounded-1 pe-5" placeholder="Password" id="Password"
+                       :type="showPassword ? 'text' : 'password'" required />
+                <label asp-for="Password" class="control-label text-body-tertiary small pt-2 h-25" for="Password">Password</label>
+                <small class="btn badge text-primary border-0" id="showPassword" @@click="passwordVisibility">{{ showPassword ? 'Hide' : 'Show' }}</small>
+                <span asp-validation-for="Password" class="text-danger text-wrap text-start badge"></span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center my-4">
+                <label for="Remember" class="badge text-dark"><input type="checkbox" id="Remember" name="remember" class="align-middle me-2 mb-1" checked>Remember Me</label>
+                <a asp-action="ForgotPassword_Email" class="badge text-primary text-decoration-none">Forgot Password?</a>
+            </div>
+            <small class="badge text-body-tertiary text-wrap text-start">By continuing this page, you agree to the <a href="https://lin.ee/etG3Xui" class="text-decoration-none">Terms of Use</a> and understand that information will be used as described in our <a href="https://lin.ee/etG3Xui" class="text-decoration-none">Privacy Policy</a>.</small>
+            <button type="submit" class="btn badge btn-primary rounded-1 float-end my-2 p-2 col-12 col-md-2 col-lg-3">Sign In</button>
+        </form>
+    </section>
+</article>

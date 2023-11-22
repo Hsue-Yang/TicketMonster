@@ -1,0 +1,30 @@
+﻿@using System.Globalization;
+@using static TicketMonster.ApplicationCore.Services.User.UserService;
+@model ActiveEventsDTO
+
+<!-- card -->
+<section class="col">
+    <div class="card border-0 shadow-sm">
+        <a asp-controller="Performer" asp-action="PerformerView" asp-route-id="@Model.PerfomerID" class="d-flex flex-column text-decoration-none">
+            <section class="position-relative">
+                <div class="position-absolute bottom-0 text-light rounded m-2 p-2 lh-sm"
+                     style="background-color: #1f262dcc">
+                    <span class="fw-semibold text-truncate-2">@Model.EventName</span>
+                    <small class="fw-light">@Model.EventCount Events</small>
+                </div>
+                <img src="@Model.EventPic"
+                     class="w-100 object-fit-cover rounded-top ratio-992x576">
+            </section>
+            <section class="card-body border border-top-0 d-flex justify-content-between rounded-bottom">
+                <div class="d-flex flex-column col-5 col-lg-6">
+                    <small class="fw-semibold text-purple">@Model.EventDate.ToString("MMM d", CultureInfo.InvariantCulture)</small>
+                    <small class="text-muted mt-auto">@Model.EventDate.ToString("ddd · H:mm", CultureInfo.InvariantCulture)</small>
+                </div>
+                <div class="d-flex flex-column col-7 col-lg-6">
+                    <span class="w-100 text-truncate text-secondary-emphasis text-end small">@Model.VenueLocation</span>
+                    <span class="w-100 text-truncate text-muted text-end small">@Model.EventName</span>
+                </div>
+            </section>
+        </a>
+    </div>
+</section>

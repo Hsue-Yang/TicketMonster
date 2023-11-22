@@ -1,0 +1,17 @@
+﻿.max-width-8 {
+    max-width: 8rem
+}
+
+.fa-angle-down {
+    transition: 0.5s;
+}
+
+[aria-expanded="true"] .fa-angle-down {
+    transform: rotate(-180deg)
+}
+
+@media screen and (min-width: 992px) {
+    #account {
+        order: -1 !important
+    }
+}

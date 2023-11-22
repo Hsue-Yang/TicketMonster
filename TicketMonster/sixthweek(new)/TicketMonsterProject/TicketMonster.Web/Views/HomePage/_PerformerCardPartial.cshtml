@@ -1,0 +1,12 @@
+﻿@using TicketMonster.Web.ViewModels.Home;
+@model PerformerCardViewModel
+
+<div class="ticket col-sm-12 col-lg-3 d-flex mt-2">
+    <div class="pic col-sm-2 col-lg-12 overflow-hidden rounded">
+        <a href="Performer/@Model.PerformerId"> <img class="w-100" src="@Model.PerformerPic"></a>
+    </div>
+    <div class="pic-text col-10 d-flex flex-column rounded">
+        <a href="Performer/@Model.PerformerId"> @Model.PerformerName</a>
+        <a href="Performer/@Model.PerformerId"><p>@Model.PerformerEventCount Events</p></a>
+    </div>
+</div>

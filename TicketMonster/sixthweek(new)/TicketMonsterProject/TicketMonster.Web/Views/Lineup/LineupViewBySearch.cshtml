@@ -1,0 +1,270 @@
+﻿@using TicketMonster.Web.ViewModels.Lineup;
+@model EventViewModelBySearch
+@{
+	ViewData["Title"] = "Search";
+	ViewBag.Navbar = true;
+	ViewBag.Footer = true;
+}
+@section topCSS{
+
+	<link href="~/daterangepicker/daterangepicker.css" rel="stylesheet" />
+	<link href="~/css/lineup.css" rel="stylesheet" />
+
+}
+@section topJS{
+	<script src="~/daterangepicker/moment.js"></script>
+	<script src="~/daterangepicker/daterangepicker.js"></script>
+
+}
+
+<div class="d-none" id="categoryId">@Model.CategoryId</div>
+<div class="d-none" id="keyWord">@Model.KeyWord</div>
+<div class="d-none" id="startTime">@Model.StartDate</div>
+<div class="d-none" id="endTime">@Model.EndDate</div>
+<div class="d-none" id="sort">@Model.SortType</div>
+
+<!-- controller跟 service參數對應完成, view待改-->
+<div class="container mt-lg-5" id="app">
+	<div class="row mt-3">
+		<div class="sportList col-lg-9  col-12 ">
+			<div>
+				<p><i class="fa-solid fa-magnifying-glass"></i> 目前您搜尋的關鍵字為 : <span class="fw-bold fst-italic fs-5">@Model.KeyWord</span> </p>
+			</div>
+			<!-- 3 options -->
+			<div class="row pb-3">
+				<!--沒有則直接推到左邊 -->
+				<div class="col-lg-4 col-12 col-md-4 d-flex">
+					<select class="form-select form-control " style="max-height: 30vw;"
+							aria-label="Select Your Gene" id="caIdDropDown">
+						<option value="0">Select Category</option>
+						<option value="1">Concert</option>
+						<option value="2">Sport</option>
+						<option value="3">Movie</option>
+					</select>
+				</div>
+				<!--datetimepicker-->
+				<div class="col-lg-4 col-12 col-md-4">
+					<input type="text" class="form-control" name="dates" value="" id="dateRangePicker" />
+				</div>
+				<div class="col-lg-4 col-12 col-md-4">
+
+					@if (Model.Events.Count != 0)
+					{
+						<select id="sortSelect" class="form-select " aria-label="Select Your Distance" value="@Model.SortType">
+							<!--寫一個方法去計算 丟入 eventId 會得到在 order內的 count數量 並做大小排序-->
+							@* <option value="popular">Most Popular</option> *@
+							@* <option value="distance">Distance</option> *@
+							<option value="0">Sort By: Date </option>
+							<option value="1">Sort By: Date Descending</option>
+							<option value="2">Sort By:Name As Ascending</option>
+							<option value="3">Sort By:Name As Descending</option>
+						</select>
+					}
+					else
+					{
+						<select id="sortSelect" class="form-select" disabled aria-label="Select Your Distance" value="@Model.SortType">
+							<option value="0">Sort By: Date </option>
+							<option value="1">Sort By: Date Descending</option>
+							<option value="2">Sort By:Name As Ascending</option>
+							<option value="3">Sort By:Name As Descending</option>
+						</select>
+					}
+				</div>
+				<div class="col-6 col-lg-8   col-md-9"></div>
+
+
+				<div class="col-lg-4 col-6 d-flex justify-content-end col-md-3  ">
+
+					@* <select class="form-control form-select my-2 border-0 ml-auto  " aria-label="Sort By: Date">
+					<option value="">Select Your Distance</option>
+					<option value="100km">100 km</option>
+					<option value="200km">200 km</option>
+					<option value="300km">300 km</option>
+					</select> *@
+				</div>
+
+			</div>
+			<!-- 賽程 list card -->
+			<div>
+				<div class="accordion " id="showlist">
+
+					<!--賽程-->
+					<partial name="_LineupCardPartial" model="Model" />
+
+					@* <div class="pagination">
+					@for (int i = 1; i <= Model.TotalPages; i++)
+					{
+					<a href="@Url.Action("LineupViewBySearch", new { keyWord=Model.KeyWord ,page = i, pageSize = Model.PageSize })">@i</a>
+					}
+					</div> *@
+					@if (Model.TotalPages > 1)
+					{
+						<nav aria-label="..." class="pt-3">
+							<ul class="pagination pagination justify-content-center">
+								<li class="page-item @(Model.CurrentPage == 1 ? "d-none" : "")">
+									<a class="page-link" href="@Url.Action("LineupViewBySearch", new{keyWord = Model.KeyWord,dates = Model.Dates,caId = Model.CategoryId,sort = Model.SortType,page = Model.CurrentPage - 1})">&laquo;</a>
+								</li>
+								@for (int i = 1; i <= Model.TotalPages; i++)
+								{
+									if (i == 1 || i == Model.TotalPages || (i >= Model.CurrentPage - 2 && i <= Model.CurrentPage + 2))
+									{
+										<li class="page-item @(i ==Model.CurrentPage ? "active" : "")"><a class="page-link" href="@Url.Action("LineupViewBySearch","Lineup", new { keyWord=Model.KeyWord ,dates=Model.Dates, caId=Model.CategoryId,sort=Model.SortType,page = i})">@i</a></li>
+									}
+									else if (i == Model.CurrentPage - 3 || i == Model.CurrentPage + 3)
+									{
+										<li class="page-item disabled">
+											<a class="page-link" href="#">...</a>
+										</li>
+									}
+								}
+
+								<li class="page-item @(Model.CurrentPage == Model.TotalPages ? "d-none" : "")">
+									<a class="page-link" href="@Url.Action("LineupViewBySearch", new
+									{keyWord = Model.KeyWord,dates = Model.Dates,caId = Model.CategoryId,sort = Model.SortType,page = Model.CurrentPage + 1})">&raquo;</a>
+								</li>
+							</ul>
+						</nav>
+					}
+
+					@*  @if (Model.Events.Count == 0)
+					{
+					<div class="col-12 d-flex mt-2">
+					<!--篩選大於可渲染時出現按鈕,沒有則隱藏-->
+					<button class="loadbtn  m-auto text-primary d-none">Load More</button>
+					</div>
+					}
+					else
+					{
+					<div class="col-12 d-flex mt-2">
+					<!--篩選大於可渲染時出現按鈕,沒有則隱藏-->
+					<button class="loadbtn  m-auto text-primary">Load More</button>
+					</div>
+					} *@
+				</div>
+			</div>
+		</div>
+		<!-- 廣告區 -->
+		<div class="Ad  d-none d-lg-block col-lg-3 ">
+			<img class="w-100" src="https://res.cloudinary.com/dyd6mqssx/image/upload/v1694804024/ad_o49tpx.jpg" />
+		</div>
+	</div>
+</div>
+
+@* @section endCSS{
+		<script src="~/js/site.js" asp-append-version="true"></script>
+} *@
+
+@section endJS{
+	<script src="~/lib/dayjs/dayjs.min.js"></script>
+	<script asp-append-version="true">
+
+		moment.updateLocale('zh-tw', {
+			// 改默認格式
+			longDateFormat: {
+				L: "YYYY/MM/DD",
+
+			}
+		});
+		const today = dayjs()
+		// 預設進來的時間
+		// let startDate = moment().format('YYYY/MM/DD');
+		// let endDate = moment().add(1, 'year').format('YYYY/MM/DD');
+		// 拿到傳進來的四個參數
+		let categoryId = document.getElementById("categoryId").innerText;
+		let keyWord = document.getElementById("keyWord").innerText;
+		let dateRange = document.getElementById("dateRangePicker").value;
+
+		// let startDate = document.getElementById("startTime").innerText;
+		// let endDate = document.getElementById("endTime").innerText;
+		let startDate = new Date('@Model.StartDate.ToString("yyyy-MM-ddTHH:mm:ss")');
+		let endDate = new Date('@Model.EndDate.ToString("yyyy-MM-ddTHH:mm:ss")');
+		let sort = document.getElementById("sort").innerText;
+		let caIdDropDown = document.getElementById("caIdDropDown");
+		let sortSelect = document.getElementById("sortSelect");
+		let page = 1;
+		sortSelect.value = sort;
+		caIdDropDown.value = categoryId;
+		
+		let url = window.location
+		let params = new URLSearchParams(url.search); 
+		let pathName = window.location.pathname; 
+
+		caIdDropDown.addEventListener("change", function () {
+
+			let caId = this.value;
+			params.delete('caId');
+			params.delete('page');
+			if (page > 1) {
+
+			params.append('page', page)
+			}
+			params.append('caId', caId);
+
+			let queryString = params.toString();
+			window.location.href = pathName + '?' + queryString;
+		})
+
+		sortSelect.addEventListener("change", function () {
+			let sortNum = this.value;
+			params.delete('sort');
+			params.delete('page');
+			params.delete('page');
+			if (page > 1) {
+
+				params.append('page', page)
+			}
+			params.append('sort', sortNum)
+			params.append('page', page)
+			let queryString = params.toString();
+			window.location.href = pathName + '?' + queryString;
+		})
+		
+		
+		$('input[name="dates"]').daterangepicker({
+			locale: {
+				applyLabel: "確定",
+				cancelLabel: "取消",
+				fromLabel: "開始日期",
+				toLabel: "結束日期",
+				customRangeLabel: "自訂日期區"
+			},
+			format: "YYYY/MM/DD",
+			minDate: today,
+			ranges: {
+				'今天': [moment(), moment()],
+				'昨天': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+				'未來7日': [moment(), moment().subtract(-6, 'days')],
+				'未來一個月': [moment(), moment().subtract(-29, 'days')],
+				'這個月': [moment().startOf('month'), moment().endOf('month')],
+				'前個月': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+			},
+			"showCustomRangeLabel": false,
+			"alwaysShowCalendars": true,
+			"startDate": startDate,
+			"endDate": endDate
+		}, function (start, end, label) {
+			console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+			startime = start.format('YYYY/MM/DD');
+			endtime = end.format('YYYY/MM/DD');
+			// debugger;
+			// startDate = startime;
+			// endDate = endtime;
+			let dateRange = `${startime}-${endtime}`
+			params.delete('dates');
+			params.delete('page');
+			params.append('dates', dateRange)
+			params.delete('page');
+			if (page > 1) {
+
+				params.append('page', page)
+			}
+			
+			let queryString = params.toString();
+			window.location.href = pathName + '?' + queryString;
+		});
+
+		
+
+		
+	</script>
+}

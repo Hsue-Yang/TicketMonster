@@ -1,0 +1,81 @@
+﻿@using System.Globalization;
+@using TicketMonster.Web.ViewModels.User;
+@model OrderDetailsViewModel
+
+@{
+    ViewData["Title"] = "Receipt";
+    ViewBag.Navbar = true;
+}
+
+@section topCSS{
+    <link href="~/css/user/events.css" rel="stylesheet" asp-append-version="true" />
+}
+
+<article class="container mt-5 mb-3">
+    <!-- breadcrumb -->
+    <nav style="--bs-breadcrumb-divider:'⇝'" class="my-4">
+        <div class="breadcrumb">
+            <a asp-action="Account" class="breadcrumb-item text-dark-emphasis text-decoration-none small">My Account</a>
+            <a asp-action="Events" class="breadcrumb-item text-dark-emphasis text-decoration-none small">My Events</a>
+            <a asp-action="EventDetails" asp-route-id="@Model.Order.Id" class="breadcrumb-item text-dark-emphasis text-decoration-none small">Event Details</a>
+            <small class="breadcrumb-item text-dark">Receipt</small>
+        </div>
+    </nav>
+    <!-- Receipt -->
+    <section class="d-flex flex-column flex-md-row justify-content-md-between align-items-start align-items-md-center gap-3">
+        <h3 class="fw-semibold mb-0">My Receipt</h3>
+        <button class="btn btn-primary rounded-0 px-4" onclick="window.print()">Print Receipt</button>
+    </section>
+    <section class="d-flex flex-wrap align-items-start gap-2 gap-lg-5">
+        <!-- detail -->
+        <article class="col-12 col-lg-6 border rounded shadow-sm my-3 p-4">
+            <section class="my-2 mb-4 pb-4 border-bottom">
+                <h3 class="fs-5 fw-semibold">@Model.Order.EventName</h3>
+                <span class="">@Model.Order.EventDate.ToString("ddd · MMM d · HH:mm", new CultureInfo("en-US")) - @Model.Order.VenueName</span>
+            </section>
+            <section class="my-2 mb-4 pb-4 border-bottom">
+                <h3 class="fs-6 fw-semibold">Standard Admission</h3>
+                <div class="overflow-auto mh-11">
+                    @foreach(var t in Model.OrderDetails) { @await Html.PartialAsync("Partial/_Tickets", t) }
+                </div>
+            </section>
+            <section class="my-2 mb-4 pb-4 border-bottom">
+                <h3 class="fs-6 fw-semibold">Ticket Fees</h3>
+                <div><span>Service Fee</span><span class="float-end">@Model.OrderDetails.Sum(x=>x.Price*.1m).ToString("c0")</span></div>
+                <div><span>Order Processing Fee</span><span class="float-end">@Model.OrderDetails.Sum(x=>x.Price*.02m).ToString("c0")</span</div>
+            </section>
+            <section class="my-2">
+                <h3 class="fs-6 fw-semibold">Taxes</h3>
+                <span>Tax</span>
+                <span class="float-end">@Model.OrderDetails.Sum(x=>x.Price*.05m).ToString("c0")</span>
+            </section>
+        </article>
+        <!-- bill -->
+        <article class="col-1 flex-grow-1 border rounded shadow-sm my-3 p-4" id="print-bill">
+            <section class="my-2 mb-4 pb-3 border-bottom">
+                <h3 class="fs-5 fw-semibold">Billing Information</h3>
+            </section>
+            <section class="my-2 mb-4 pb-4 border-bottom">
+                <h3 class="fs-6 fw-semibold">Order #</h3>
+                <span>@await Html.PartialAsync("Partial/_OrderId", Model.Order)</span>
+            </section>
+            <section class="my-2 mb-4 pb-4 border-bottom">
+                <h3 class="fs-6 fw-semibold">Order Date</h3>
+                <span>@Model.Order.EventDate.ToString("ddd · MMM d · yyyy", new CultureInfo("en-US"))</span>
+            </section>
+            <section class="my-2 mb-4 pb-4 border-bottom">
+                <h3 class="fs-6 fw-semibold">Name</h3>
+                <span>@Model.Customer.FirstName @Model.Customer.LastName</span>
+            </section>
+            <section class="my-2 mb-4 pb-4 border-bottom">
+                <h3 class="fs-6 fw-semibold">Billing Address</h3>
+                <span>@Model.Customer.Address</span>
+            </section>
+            <section class="d-flex justify-content-between mt-4 pt-4 pb-2">
+                <h3 class="fw-bold fs-4">Payment Info</h3>
+                <span class="fs-5 fw-semibold">@Model.Order.BillingAmount.ToString("c0", new CultureInfo("zh-TW"))</span>
+            </section>
+        </article>
+    </section>
+</article>
+

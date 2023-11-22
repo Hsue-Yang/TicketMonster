@@ -1,0 +1,207 @@
+﻿@using TicketMonster.Web.ViewModels.Performer;
+@model PerformerPageViewModel
+
+@{
+    ViewBag.Navbar = true;
+    ViewBag.Footer = true;
+    ViewData["Title"] = "Performer";
+}
+
+@section topCSS{
+    <style>
+
+
+        .header * {
+            color: aliceblue;
+        }
+
+        .breadcrumb * {
+            text-decoration: none;
+        }
+
+        .header {
+            background-image: url("@Model.PerformerPic");
+            background-position: center center;
+            width: 100%;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .bg {
+            backdrop-filter: brightness(.3) blur(8px);
+            width: 100%;
+        }
+
+        .header h1 {
+            font-size: 28px;
+        }
+
+        .hover-underline-animation {
+            display: inline-block;
+            position: relative;
+            color: #0087ca;
+        }
+
+            .hover-underline-animation:after {
+                content: '';
+                position: absolute;
+                width: 100%;
+                transform: scaleX(0);
+                height: 2px;
+                bottom: 0;
+                left: 0;
+                background-color: #0087ca;
+                transform-origin: bottom right;
+                transition: transform 0.25s ease-out;
+            }
+
+            .hover-underline-animation:hover:after {
+                transform: scaleX(1);
+                transform-origin: bottom left;
+            }
+
+
+        .eventcard:hover {
+            box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+        }
+
+
+
+        @@media (min-width: 992px) {
+            .header h1 {
+                font-size: 30px;
+            }
+
+            .buyticket {
+                border-radius: 4px;
+                background-color: #5ca1e1;
+                border: none;
+                color: #fff;
+                text-align: center;              
+                padding: 16px;               
+                transition: all 0.5s;
+                cursor: pointer;
+                margin: 36px;
+                box-shadow: 0 10px 20px -8px rgba(0, 0, 0,.7);
+            }
+
+            .buyticket {
+                cursor: pointer;
+                display: inline-block;
+                position: relative;
+                transition: 0.5s;
+            }
+
+                .buyticket:after {
+                    content: '»';
+                    position: absolute;
+                    opacity: 0;
+                    top: 15px;
+                    right: -20px;
+                    transition: 0.5s;
+                }
+
+                .buyticket:hover {
+                    padding-right: 24px;
+                    padding-left: 8px;
+                }
+
+                    .buyticket:hover:after {
+                        opacity: 1;
+                        right: 10px;
+                    }
+        }
+
+        @@media (min-width: 1400px) {
+            .header h1 {
+                font-size: 50px;
+            }
+        }
+
+    </style>
+    <link href="~/daterangepicker/daterangepicker.css" rel="stylesheet" />
+}
+
+@section topJS{
+    <script src="~/daterangepicker/moment.js"></script>
+    <script src="~/daterangepicker/daterangepicker.js"></script>
+}
+
+@section endJS{
+    <script>
+        let start
+        let end
+        let id = @Model.PerformerId;
+        var startDate = new Date('@Model.StartTime.ToString("yyyy-MM-ddTHH:mm:ss")');
+        var endDate = new Date('@Model.EndTime.ToString("yyyy-MM-ddTHH:mm:ss")');
+        $('input[name="dates"]').daterangepicker({
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Futrue 7 Days': [moment(), moment().subtract(-6, 'days')],
+                'Future 30 Days': [moment(), moment().subtract(-29, 'days')],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            },
+            "showCustomRangeLabel": false,
+            "alwaysShowCalendars": true,
+            "startDate": startDate,
+            "endDate": endDate
+        },
+            function (start, end, label) {
+                console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+                startt = start.format('YYYY-MM-DD');
+                endd = end.format('YYYY-MM-DD');
+                // var url = `/Performer/?id=${id}&start=${start}&end=${end}`;
+                var url = `/Performer/${id}/${startt}/${endd}`;
+                window.location.href = url;
+            });
+    </script>
+    }
+
+@section header{
+    <partial name="_PerformerPartial" model="Model.PerformerDetails" />
+    }
+
+
+<div class="container col-xs-11 col-lg-8 mx-auto mt-5">
+    <div class="row">
+        <h2 class="text-center hover-underline-animation">EVENTS</h2>
+    </div>
+</div>
+
+<!-- input -->
+<div class="container col-xs-11 col-lg-8 mx-auto pt-1 ">
+    <div class="row">
+        <div class="col-sm-12 col-lg-5">
+            <input type="text" class="form-control text-center" name="dates" value="01/01/2018 - 01/15/2018" />
+        </div>
+    </div>
+</div>
+
+<!-- eventlist  -->
+<div class=" container col-xs-11 col-lg-8 mx-auto">
+    <div class="row">
+        @* 藝人所有活動的排卡*@
+        <partial name="_EventCardPartial" model="Model.EventDetailCards" />
+    </div>
+</div>
+
+<!-- About -->
+<div class="container col-xs-11 col-lg-8 mx-auto pt-5 about @Model.PerformerId">
+    <div class="row mx-auto">
+        <h2 class="text-center hover-underline-animation">ABOUT</h2>
+        <p class="fw-bolder">@Model.PerformerName in @Model.PerformerCategoryName</p>
+        <p>
+            @Model.AboutPerformer
+        </p>
+    </div>
+</div>
+
+
+
+
+
+
+
+

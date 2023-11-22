@@ -1,0 +1,25 @@
+﻿@using TicketMonster.Web.ViewModels.Performer;
+@model List<EventDetailCardViewModel>
+
+@foreach (var card in Model)
+{
+    <div class="mx-auto d-flex pt-3 border-bottom eventcard">
+        <div class="col-1 text-center">
+            <p>@card.Month</p>
+            <p class="fw-bolder fs-4">@card.Day</p>
+        </div>
+        <div class="col-7 ps-3">
+            <p class="d-inline">@card.Time</p>
+            <p class="my-0 fw-bold">@card.Location<br>@card.Venue</p>
+            <p class="d-inline">@card.EventName</p>
+            <p class="d-inline">ENCORE IN </p>
+            <p class="d-inline">@card.Venue</p>
+        </div>
+        <div class="col-4 d-flex flex-column justify-content-center">
+                <a href="/Purchase?id=@card.ID" class="mx-auto">
+                <button class="btn btn-primary buyticket">Buy Ticket</button>
+            </a>
+        </div>
+    </div>
+}
+

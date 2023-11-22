@@ -1,0 +1,80 @@
+﻿@using TicketMonster.Web.ViewModels.User;
+@model EventsViewModel
+
+@{
+    ViewData["Title"] = "Events";
+    ViewBag.Navbar = true;
+}
+
+@section topCSS{
+    <link href="~/css/user/events.css" rel="stylesheet" asp-append-version="true" />
+}
+
+<article class="container my-5">
+    <!-- breadcrumb -->
+    <nav style="--bs-breadcrumb-divider:'⇝'" class="my-4">
+        <div class="breadcrumb">
+            <small class="breadcrumb-item">
+                <a asp-action="Account" class="text-dark-emphasis text-decoration-none">My Account</a>
+            </small>
+            <small class="breadcrumb-item text-dark">My Events</small>
+        </div>
+    </nav>
+    <!-- My Events -->
+    <section class="d-flex justify-content-between align-items-center">
+        <h2 class="fs-1 fw-semibold mb-0">My Events</h2>
+        <a asp-controller="" asp-action="" class="small text-decoration-none">Choose More Tickets <i class="fa-solid fa-angle-right"></i></a>
+    </section>
+    <!-- control -->
+    <section class="nav my-4 border-bottom gap-4">
+        <button class="btn text-dark rounded-0 border-top-0 border-start-0 border-end-0 border-3 fs-5 px-0 active"
+                data-bs-toggle="pill" data-bs-target="#upcoming">
+            Upcoming
+        </button>
+        <button class="btn text-dark rounded-0 border-top-0 border-start-0 border-end-0 border-3 fs-5 px-0"
+                data-bs-toggle="pill" data-bs-target="#past_events">
+            Past Events
+        </button>
+    </section>
+    <!-- content -->
+    <section class="tab-content">
+        @{
+            var futureEvents = Model.Orders.Where(x => x.EventDate > DateTime.Now).OrderBy(x => x.EventDate);
+            var pastEvents = Model.Orders.Where(x => x.EventDate < DateTime.Now).OrderByDescending(x => x.EventDate);
+        }
+        <div class="tab-pane active show" id="upcoming">
+            <article class="my-4">
+                @if (futureEvents.Any())
+                {
+                    foreach (var m in futureEvents)
+                    {
+                        @await Html.PartialAsync("Partial/_Events", m)
+                    }
+                }
+                else
+                {
+                    <section class="py-5">
+                        @await Html.PartialAsync("Partial/_NoEvents")
+                    </section>
+                }
+            </article>
+        </div>
+        <div class="tab-pane" id="past_events">
+            <article class="my-4">
+                @if (pastEvents.Any())
+                {
+                    foreach (var m in pastEvents)
+                    {
+                        @await Html.PartialAsync("Partial/_Events", m)
+                    }
+                }
+                else
+                {
+                    <section class="py-5">
+                        @await Html.PartialAsync("Partial/_NoEvents")
+                    </section>
+                }
+            </article>
+        </div>
+    </section>
+</article>

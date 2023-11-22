@@ -1,0 +1,29 @@
+﻿@using System.Globalization;
+@model Order
+
+<!-- card -->
+<a asp-action="EventDetails" asp-route-id="@Model.Id" class="card border rounded-0 d-flex flex-column flex-md-row align-items-start text-decoration-none my-3 px-md-3 py-md-2 py-xl-3">
+    <section class="col-12 col-md-4 col-lg-3 m-auto">
+        <img src="@Model.EventPic"
+             class="w-100 object-fit-cover" style="aspect-ratio: 1024/576">
+    </section>
+    <section class="col-12 col-md-6 col-lg-8 card-body d-flex flex-column gap-3 px-3 px-lg-4">
+        <h5 class="fs-6 text-truncate">
+            @Model.EventName
+        </h5>
+        <i class="fa-regular fa-calendar">
+            <small class="badge fs-7 text-dark-emphasis py-0">
+                @Model.EventDate.ToString("yyyy · ddd · MMM d · HH:mm", new CultureInfo("en-US"))
+            </small>
+        </i>
+        <i class="fa-solid fa-location-crosshairs">
+            <small class="badge fs-7 text-dark-emphasis py-0 ps-1">
+                @Model.VenueLocation
+            </small>
+        </i>
+        <small class="badge text-start text-dark-emphasis fw-normal p-0">
+            Order # @await Html.PartialAsync("Partial/_OrderId", Model)
+        </small>
+    </section>
+    <div class="btn badge btn-primary bg-transparent text-primary fw-normal rounded-0 d-none d-md-inline-block m-3 py-2 px-3">See Details</div>
+</a>

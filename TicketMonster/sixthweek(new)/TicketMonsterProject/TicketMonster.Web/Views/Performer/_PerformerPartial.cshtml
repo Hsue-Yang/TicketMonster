@@ -1,0 +1,25 @@
+﻿@using TicketMonster.Web.ViewModels.Performer;
+@model PerformerInfoViewModel
+
+<div class="header">    
+    <div class="bg pb-3 px-3">
+        <nav class="col-xs-11 col-lg-8 d-flex mx-auto" aria-label="breadcrumb">
+            <ol class="breadcrumb text-decoration-none pt-2">
+                <li class="breadcrumb-item"><a asp-controller="HomePage" asp-action="HomePageView">Home</a></li>
+                <li class="breadcrumb-item"><a href="~/Category/@Model.PerformerCategoryId">@Model.PerformerCategory</a></li>          
+                <li class="breadcrumb-item"><a href="~/Category/@Model.PerformerCategoryId/@Model.PerformerSubCategoryId">@Model.PerformerSubCategory</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a href="#">@Model.PerformerName Tickets</a></li>
+            </ol>
+        </nav>
+        <div class="col-xs-11 col-lg-8 d-flex mx-auto ">
+            <div class="col-sm-4 col-xl-2">
+                <img class="w-100 rounded" src="@Model.PerformerPic"
+                     alt="">
+            </div>
+            <div class="pt-3 px-3 col-sm-8 col-xl-10 d-flex flex-column justify-content-center">
+                <p class="fs-5">@Model.PerformerSubCategory</p>
+                <h1 class="pt-1 fw-bolder">@Model.PerformerName Tickets</h1>
+            </div>
+        </div>
+    </div>
+</div>

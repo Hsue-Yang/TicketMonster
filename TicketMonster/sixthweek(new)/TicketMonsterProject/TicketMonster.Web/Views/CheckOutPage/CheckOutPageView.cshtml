@@ -1,0 +1,513 @@
+﻿@model CheckOutPageViewModel
+@{
+    ViewData["Title"] = "Checkout Page";
+}
+
+@section topCSS{
+    <style>
+        :root {
+            --bs-primary-bg-subtle: none;
+        }
+
+        .payment-button-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            vertical-align: middle;
+        }
+
+        .btn-paypal, .btn-Klarna {
+            width: 6.25rem;
+            height: 2.5rem;
+        }
+
+        .btn.btn-paypal {
+            background-color: rgb(241, 183, 21);
+        }
+
+        .btn.btn-Klarna {
+            background-color: pink;
+        }
+
+        .text-primary > b {
+            margin-right: 20px;
+            margin-left: 20px;
+        }
+    </style>
+}
+
+
+@section header{
+    <nav class="navbar bg-primary navbar-dark p-3 navbar-expand-sm">
+        <div class="container">
+            <!-- Left Space -->
+            <div class="col-1"></div>
+            <!-- Main Content -->
+            <div class="col-10 d-flex justify-content-between">
+                <!-- Brand Logo/Text -->
+                <a href="" class="navbar-brand d-none d-sm-inline-block">Ticketmonster</a>
+                <a href="" class="navbar-brand d-inline-block d-sm-none">t</a>
+                <!-- Checkout Text -->
+                <h5 class="navbar-text text-white">Checkout</h5>
+                <!-- Timer -->
+                <div id="countdown" class="navbar-text">Time Remaining: 10:00</div>
+            </div>
+            <!-- Right Space -->
+            <div class="col-1"></div>
+        </div>
+    </nav>
+
+    <!-- Modal -->
+    <div class="modal fade" id="timeOutModal" tabindex="-1" aria-labelledby="timeOutModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="timeOutModalLabel">TicketMonster</h5>
+                </div>
+                <div class="modal-body">
+                    時間已到，請重新選擇票券。
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="window.history.back();">確認</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+
+
+
+<div class="row">
+    <!-- 左邊的空白空間 -->
+    @* <div class="col-12 col-md-1"></div>
+    <div class="col-12 col-md-6">*@
+    <div class="border mb-4 mt-5 p-3 col-8">
+        <!-- 第一個區塊的內容 -->
+        <div class="d-flex align-items-center">
+            <h5>Delivery</h5>
+            <svg width="30px" height="30px" fill="none" stroke="green" stroke-width="1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+        </div>
+        <div class="mt-3">
+            <h6>Mobile - Free</h6>
+            <small class="text-muted">
+                Your phone's your ticket. Locate your tickets in your account -
+                or in your app. When you go mobile, your tickets will not be
+                emailed to you or available for print.
+            </small>
+        </div>
+    </div>
+    @*  <div class="border mb-4 p-3">
+    <!-- 第二個區塊的內容 -->
+    <h5>Payment</h5>
+    <div class="m-4">
+    <h6 class="mb-4">Pay With</h6>
+    <button type="button" class="btn btn-paypal">
+    <img src="https://res.cloudinary.com/dq4hqnpb4/image/upload/v1695215765/Pay_pal_qd8smx.png" alt="Pay with Paypal" class="payment-button-image" />
+    </button>
+    <button type="button" class="btn btn-Klarna">
+    <img src="https://res.cloudinary.com/dq4hqnpb4/image/upload/v1695215765/Klarna.svg_tclhyx.png" alt="Pay with Klarna" class="payment-button-image" />
+    </button>
+    <p class="mt-4 text-muted">
+    Pay in full or split up your payments with buy now, pay later
+    options from PayPal or Klarna. By using a digital wallet and
+    continuing past this page, you have read and are accepting the
+    <a href="" class="text-decoration-none">Terms of Use</a>.
+    </p>
+    </div>
+
+    <hr />
+    <!-- ===== -->
+    <h6>Use Credit / Debit Card</h6>
+    <div class="accordion" id="accordionExample">
+    <div class="accordion-item border-0">
+    <h2 class="accordion-header" id="headingOne">
+    <button class="accordion-button justify-content-between align-items-center shadow-none bg-white"
+    type="button"
+    data-bs-toggle="collapse"
+    data-bs-target="#collapseOne"
+    aria-expanded="true"
+    aria-controls="collapseOne">
+    <span class="text-primary mr-4"><b>+</b></span>
+    <svg xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    fill="currentColor"
+    class="bi bi-credit-card"
+    viewBox="0 0 16 16">
+    <path d="M14 3H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zm-1 3H3V5h10v1z" />
+    </svg>
+    <span class="text-primary ml-4"><b>Add New Card</b></span>
+    </button>
+    </h2>
+    <div id="collapseOne"
+    class="accordion-collapse collapse show"
+    aria-labelledby="headingOne"
+    data-bs-parent="#accordionExample">
+    <div class="accordion-body">
+    <!-- More content to be displayed here -->
+    <form id="payment-form">
+    <div class="form-group pt-3">
+    <label for="cardName">Name on Card</label>
+    <input type="text" class="form-control border-dark" id="cardName" placeholder="">
+    </div>
+    <div class="form-group pt-3">
+    <label for="cardNumber">Card Number</label>
+    <input type="text" class="form-control border-dark" id="cardNumber" placeholder="">
+    </div>
+    <div class="row pt-3">
+    <div class="form-group col-md-6">
+    <label for="expiry">Expiration Date</label>
+    <input type="text" class="form-control border-dark" id="expiry" placeholder="MM/YY">
+    </div>
+    <div class="form-group col-md-6">
+    <label for="cvv">Security Code</label>
+    <input type="text" class="form-control border-dark" id="cvv" placeholder="CVV">
+    </div>
+    </div>
+    <div class="form-group pt-3">
+    <label for="country">Country</label>
+    <select class="form-control border-dark" id="country">
+    <!-- List of countries goes here -->
+    </select>
+    </div>
+    <div class="form-group pt-3">
+    <label for="address1">Address Line 1</label>
+    <input type="text" class="form-control border-dark" id="address1" placeholder="">
+    </div>
+    <div class="form-group pt-3">
+    <label for="address2">Address Line 2 (Optional)</label>
+    <input type="text" class="form-control border-dark" id="address2" placeholder="">
+    </div>
+    <div class="row pt-3">
+    <div class="form-group col-md-6">
+    <label for="city">City</label>
+    <input type="text" class="form-control border-dark" id="city" placeholder="">
+    </div>
+    <div class="form-group col-md-6">
+    <label for="state">State</label>
+    <select class="form-control border-dark" id="state">
+    <!-- List of states goes here -->
+    </select>
+    </div>
+    </div>
+    <div class="row pt-3">
+    <div class="form-group col-md-6">
+    <label for="postalCode">Postal Code</label>
+    <input type="text" class="form-control border-dark" id="postalCode" placeholder="">
+    </div>
+    <div class="form-group col-md-6">
+    <label for="phoneNumber">Phone Number</label>
+    <input type="text" class="form-control border-dark" id="phoneNumber" placeholder="">
+    </div>
+    </div>
+    <div class="form-check pt-3">
+    <input class="form-check-input border-dark" type="checkbox" id="saveCardCheck">
+    <label class="form-check-label" for="saveCardCheck">Save this card for future purchases</label>
+    </div>
+    <div class="pt-3">
+    <small>Set as a primary card for:</small>
+    </div>
+    <div class="form-check pt-3">
+    <input class="form-check-input border-dark" type="checkbox" id="setPrimaryCheck">
+    <label class="form-check-label" for="setPrimaryCheck">Set as a primary card for: Payment</label>
+    </div>
+    <div class="">
+    <small>For when you are purchasing tickets</small>
+    </div>
+    <div class="d-flex justify-content-end pt-3">
+    <button type="button" class="btn btn-outline-primary border- m-3">Cancel</button>
+    <button type="submit" class="btn btn-primary m-3">Add New Card</button>
+    </div>
+    </form>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>*@
+    <div class="col-3 col-md-4">
+        <!-- 第三個區塊的內容 -->
+        <div class="border mb-4 mt-5 p-3">
+            <div class="accordion" id="accordionExample">
+                <div class="accordion-item border-0">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button justify-content-between align-items-center shadow-none bg-white"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapseTwo"
+                                aria-expanded="true"
+                                aria-controls="collapseTwo">
+                            <div class="d-flex justify-content-between w-100 p-2 tickettotal">
+                                <h5>Total</h5>
+                                <h5>{{顯示金額}}</h5>
+                            </div>
+                        </button>
+                    </h2>
+                    <div id="collapseTwo"
+                         class="accordion-collapse collapse show"
+                         aria-labelledby="headingTwo"
+                         data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <!-- 這裡放入你想展示的更多內容 -->
+                            <p class="d-flex justify-content-between ticket">
+                                <span>Standard Ticket: {{$25.00 x 2}}</span>
+                                <span>${{50.00}}</span>
+
+                            </p>
+                            <h5>Fees</h5>
+                            <p class="d-flex justify-content-between mb-1 ServiceFee">
+                                <span class="text-muted">Service Fee</span>
+                                <span>${{11.60}}</span>
+                            </p>
+                            <p class="d-flex justify-content-between OrderProcessingFee">
+                                <span class="text-muted">Order Processing Fee</span>
+                                <span>${{3.30}}</span>
+                            </p>
+                            <h5>Taxes</h5>
+                            <p class="d-flex justify-content-between Tax">
+                                <span class="text-muted">Tax</span>
+                                <span>${{4.44}}</span>
+                            </p>
+                            <a href="#" class="text-decoration-none" onclick="goBack(event);">Cancel Order</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <small class="mt-3 text-muted">*All Sales Final - No Refunds</small>
+            <div class="form-check mt-3">
+                <input type="checkbox"
+                       class="form-check-input border border-dark"
+                       id="termsCheck" />
+                <label class="form-check-label" for="termsCheck">
+                    <b>I have read and agree to the current Terms of Use.</b>
+                </label>
+            </div>
+            <div>
+                <button id="placeOrderButton" class="btn btn-success btn-block m-3 w-100 mx-auto">
+                    Place Order
+                </button>
+            </div>
+            <small class="text-muted">
+                *Exceptions may apply, see our
+                <a href="#" class="text-decoration-none">Terms of Use</a>.
+            </small>
+        </div>
+        <div class="border mb-4">
+            <!-- 第四個區塊的內容 -->
+            <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner p-3">
+                    @for (int i = 0; i < Model.Pic.Count; i++)
+                    {
+                        <div class="carousel-item @(i == 0 ? "active" : "")">
+                            <img src="@Model.Pic[i]" class="d-block w-100" alt="..." />
+                        </div>
+                    }
+                </div>
+                <div />
+                <!-- 圖片左右移動的箭頭 -->
+                <button class="carousel-control-prev"
+                        type="button"
+                        data-bs-target="#carouselExampleControls"
+                        data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"
+                          aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next"
+                        type="button"
+                        data-bs-target="#carouselExampleControls"
+                        data-bs-slide="next">
+                    <span class="carousel-control-next-icon"
+                          aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+                <!-- Text Info -->
+            </div>
+            <div class="p-3">
+                <h5 class="mt-3">
+                    @Model.EventName
+                </h5>
+                <small class="text-muted">
+                    @Model.EventDate  <br />
+                    @Model.Venue
+                </small>
+            </div>
+        </div>
+    </div>
+    <!-- 右邊的空白空間 -->
+    <div class="col-12 col-md-1"></div>
+
+
+
+    @section endJS{
+
+        <script>
+            const orderData = getCookie("OrderData"); //從Cookie取得資料
+            if (orderData == null) {
+                window.history.back();
+            };
+            //進入頁面的倒數計時功能
+            document.addEventListener('DOMContentLoaded', function () {
+                const countdownElement = document.getElementById('countdown');
+                let timeRemaining = 1 * 600; // 10 分鐘，單位為秒
+
+                function formatTime(seconds) {
+                    const mins = Math.floor(seconds / 60);
+                    const secs = seconds % 60;
+                    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+                }
+
+                function updateCountdownDisplay() {
+                    countdownElement.textContent = "Time Remaining: " + formatTime(timeRemaining);
+                }
+
+                const interval = setInterval(function () {
+                    timeRemaining--;
+                    updateCountdownDisplay();
+
+                    if (timeRemaining <= 0) {
+                        clearInterval(interval); // 停止計時
+                        const timeoutModal = new bootstrap.Modal(document.getElementById('timeOutModal'), {
+                            keyboard: false,
+                            backdrop: 'static'
+                        });
+                        timeoutModal.show();
+                    }
+                }, 1000); // 每秒更新
+
+                // 初始化
+                updateCountdownDisplay();
+            });
+
+            const placeOrderButton = document.getElementById("placeOrderButton");
+            const orderDataa = JSON.parse(orderData); //將Cookie轉成物件     
+            const orderDataTemp = getCookie("OrderData");  
+
+            if (orderDataTemp !== null) {
+                var sendDataToBackEndToCount = {
+                    orderData: decodeURIComponent(orderDataTemp)
+                };
+
+                $.ajax({
+                    url: '/CheckOutPage/CountOrderTotalMoney',
+                    type: 'POST',
+                    data: JSON.stringify(sendDataToBackEndToCount),
+                    contentType: 'application/json',
+                    success: function (response) {
+                        console.log(response);
+                        const ticketPrice = response.TicketPrice;
+                        const ticketCount = response.TicketCount;
+                        const ticketName = response.TicketName;
+                        const orderOriginMoney = response.OrderOriginMoney;
+                        const ServiceFee = response.ServiceFee;
+                        const OrderProcessingFee = response.OrderProcessingFee;
+                        const Tax = response.Tax;
+                        const orderTotalMoney = response.OrderTotalMoney;
+
+                        //將資料放進取得Dom元素(折起來的)
+                        let ticketElement = document.querySelector('.ticket');
+                        ticketElement.querySelector('span:first-child').textContent = `${ticketName}: ${ticketPrice} x ${ticketCount}`;
+                        ticketElement.querySelector('span:last-child').textContent = `${orderOriginMoney}`;
+
+                        let ticketElementServiceFee = document.querySelector('.ServiceFee');
+                        ticketElementServiceFee.querySelector('span:last-child').textContent = `${ServiceFee}`;
+
+                        let ticketElementOrderProcessingFee = document.querySelector('.OrderProcessingFee');
+                        ticketElementOrderProcessingFee.querySelector('span:last-child').textContent = `${OrderProcessingFee}`;
+
+                        let ticketElementTax = document.querySelector('.Tax');
+                        ticketElementTax.querySelector('span:last-child').textContent = `${Tax}`;
+
+                        //手風琴上的
+                        let ticketElementHeader = document.querySelector('.tickettotal');
+                        ticketElementHeader.querySelector('h5:last-child').textContent = `${orderTotalMoney}`;
+                    },
+                    error: function (error) {
+                        window.history.back();
+                    }
+                });
+            }    
+            
+
+            //按下Cancel Order會返回上一頁
+            function goBack(event) {
+                event.preventDefault();  // 阻止連結的默認行為
+                window.history.back();
+            }
+
+            //有打勾才能按下PlaceOrder
+            const termsCheckbox = document.getElementById("termsCheck");
+            document.addEventListener('DOMContentLoaded', function () {
+
+                // 函數來更新按鈕狀態
+                function updateButtonStatus() {
+                    if (termsCheckbox.checked) {
+                        placeOrderButton.removeAttribute('disabled');
+                        placeOrderButton.style.opacity = 1;
+                    } else {
+                        placeOrderButton.setAttribute('disabled', 'disabled');
+                        placeOrderButton.style.opacity = 0.5;  // 使按鈕變淡
+                    }
+                }
+
+                // 初始化按鈕和checkbox的狀態
+                function initializeStatus() {
+                    termsCheckbox.checked = false;  // 將checkbox設為未選中
+                    updateButtonStatus();  // 根據checkbox狀態更新按鈕
+                }
+
+                initializeStatus();  // 載入時初始化
+
+                // 監聽checkbox的變化
+                termsCheckbox.addEventListener('change', updateButtonStatus);
+            });
+
+            //取Cookie
+            function getCookie(cookieName) {
+                var name = cookieName + "=";
+                var decodedCookie = decodeURIComponent(document.cookie);
+                var cookieArray = decodedCookie.split(';');
+                for (var i = 0; i < cookieArray.length; i++) {
+                    var cookie = cookieArray[i].trim();
+                    if (cookie.indexOf(name) === 0) {
+                        return cookie.substring(name.length, cookie.length);
+                    }
+                }
+                return null;
+            }          
+
+            placeOrderButton.addEventListener("click", function () {
+
+                if (orderDataTemp !== null) {
+                    var sendDataToEcPay = {
+                        orderData: decodeURIComponent(orderDataTemp)
+                    };
+
+                    $.ajax({
+                        url: '/CheckOutPage/GetOrderCookie',
+                        type: 'POST',
+                        data: JSON.stringify(sendDataToEcPay),
+                        contentType: 'application/json',
+                        success: function (response) {
+                            console.log(response);                     
+                            if (response.nextAction) {
+                                window.location.href = response.nextAction;
+                            }
+                        },
+                        error: function (error) {
+                            console.error(error);
+                        }
+                    });
+
+                } else {
+                    console.log("Cookie 'OrderData' not found.");
+                }
+                termsCheckbox.checked = false;
+            });
+
+        </script>
+
+
+    }

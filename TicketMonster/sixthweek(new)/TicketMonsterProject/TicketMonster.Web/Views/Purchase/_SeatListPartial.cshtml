@@ -1,0 +1,35 @@
+﻿
+@model PurchasePageViewModel
+@{
+    string seatNumJson = Newtonsoft.Json.JsonConvert.SerializeObject(ViewData["seatNumJson"]);
+    var sJson = Newtonsoft.Json.JsonConvert.DeserializeObject<List<SeatNum>>(seatNumJson);
+    string seatSectionJson = Newtonsoft.Json.JsonConvert.SerializeObject(ViewData["seatSectionJson"]);
+    var sectionJson = Newtonsoft.Json.JsonConvert.DeserializeObject<List<SeatNum>>(seatSectionJson);
+}
+@foreach (var item in sJson)
+{
+    <a href="#"
+       class="price-delist text-decoration-none"
+       data-bs-toggle="offcanvas"
+       data-bs-target="#offcanvasScrolling"
+       aria-controls="offcanvasScrolling" onclick="showNum()">
+        <div class="bcg-hover d-flex justify-content-between align-items-center m-2">
+            <div class="seat-num d-flex flex-column">
+                <span class="seatNum">Sec @item.SeatSectionId , Num @item.SeatNum1 </span><span class="seat-type">Standard permission</span>
+            </div>
+            @foreach (var items in sectionJson)
+            {
+                @if (item.SeatSectionId == items.SeatSection.Id)
+                {
+                    <div class="seat-price ms-3">
+                        <p class="seatPrice text-decoration-none m-auto">
+                            @items.SeatSection.SectionPrice
+                        </p>
+                    </div>
+                }
+            }
+
+        </div>
+    </a>
+}
+

@@ -1,0 +1,49 @@
+﻿*::-webkit-scrollbar {
+    display: none
+}
+
+body.swal2-shown {
+    padding-right: 0 !important
+}
+
+.owl-dot {
+    margin: .5rem;
+    border-radius: 50%;
+    border: .2rem solid #7066e0 !important;
+    opacity: .5
+}
+
+.owl-dot.active {
+   opacity: 1
+}
+
+.swal2-html-container{
+    color: #fff !important
+}
+
+.text-truncate-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.ratio-5x3 {
+    aspect-ratio: 5/3
+}
+
+.bg-text {
+    background-color: #1f262dcc
+}
+
+.w-99{
+    width: calc(100% - 1rem)
+}
+
+.mh-30{
+    max-height: 30rem
+}
+
+.overflow{
+    overflow-x: clip !important
+}

@@ -1,0 +1,94 @@
+.partialbackground {
+    background-color:black;
+    background-size: cover;
+}
+
+* {
+    font-family: 'Oswald', sans-serif;
+}
+.partialfooter * {
+    text-decoration: none;
+    color: white;
+}
+
+    .partialfooter .list-unstyled {
+        display: none;
+    }
+
+    .partialfooter .partialfootermark {
+        display: none;
+    }
+
+    .partialfooter .fa-solid {
+        display: none;
+    }
+
+    .partialfooter a {
+        font-size: 14px;
+    }
+
+.partialfootertext {
+    font-size: 12px;
+}
+
+.partialfootericon {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+}
+
+
+
+@media (min-width: 992px) {
+    .partialfooter .list-unstyled {
+        display: block;
+    }
+
+        .partialfooter .list-unstyled :first-child {
+            margin-top: 50px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .partialfooter .list-unstyled li {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+    .partialfootermark {
+        position: absolute;
+        top: 5%;
+        right: -5%;
+        display: inline;
+        font-size: 30px;
+        font-weight: bolder;
+    }
+
+    .partialfootertext {
+        position: relative;
+    }
+
+    .partialfootericon {
+        position: absolute;
+        top: 30%;
+        right: 0%;
+        margin-top: 0px;
+        display: inline;
+        width: 25%;
+    }
+
+    .partialfooter .fa-earth-asia {
+        display: block;
+        position: absolute;
+        right: -4%;
+        top: 55%;
+    }
+
+    .partialfooter .partialfootermark {
+        display: block;
+        position: absolute;
+        left: 0px;
+        top: 0%;
+    }
+}

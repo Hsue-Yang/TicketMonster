@@ -1,0 +1,285 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+header {
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNDM3IDU3Ij48Zz48ZyBvcGFjaXR5PSIuMTAyIj48bGluZWFyR3JhZGllbnQgaWQ9ImEiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iNDEzLjM0NSIgeTE9IjUwNC4zMzYiIHgyPSI0MTMuMDM0IiB5Mj0iNTA0Ljg3IiBncmFkaWVudFRyYW5zZm9ybT0ibWF0cml4KDE0NDAgMCAwIC0yMTggLTU5NDMwNyAxMTAwMjMpIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMwMjQ2OTEiLz48c3RvcCBvZmZzZXQ9Ii41MyIgc3RvcC1jb2xvcj0iI2JhZGJmZSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2M1NmJmZiIvPjwvbGluZWFyR3JhZGllbnQ+PHBhdGggZmlsbD0idXJsKCNhKSIgZD0iTTAtLjJoMTE3LjJMMTQ0MCA1N0gzOTEuOXoiLz48Zz48bGluZWFyR3JhZGllbnQgaWQ9ImIiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iNDEzLjM4NyIgeTE9IjUwNC4xOTIiIHgyPSI0MTMuMDE5IiB5Mj0iNTA0Ljk3NiIgZ3JhZGllbnRUcmFuc2Zvcm09Im1hdHJpeCgxNDQwIDAgMCAtMjE4IC01OTQzMDcgMTEwMDIzKSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLW9wYWNpdHk9IjAiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3Atb3BhY2l0eT0iLjQiLz48c3RvcCBvZmZzZXQ9IjEiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3Atb3BhY2l0eT0iLjQiLz48L2xpbmVhckdyYWRpZW50PjxwYXRoIGZpbGw9InVybCgjYikiIGQ9Ik0wLS4yaDExNy4yTDE0NDAgNTdIMzkxLjl6Ii8+PC9nPjwvZz48bGluZWFyR3JhZGllbnQgaWQ9ImMiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iNDE0LjI2NiIgeTE9IjUwNC4yNjkiIHgyPSI0MTQuMzgiIHkyPSI1MDQuNTg2IiBncmFkaWVudFRyYW5zZm9ybT0ibWF0cml4KC00NzQuNjU5MiAwIDAgLTIxOCAxOTc4ODQuMjY2IDExMDAyMikiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1vcGFjaXR5PSIwIi8+PHN0b3Agb2Zmc2V0PSIxIi8+PHN0b3Agb2Zmc2V0PSIxIi8+PC9saW5lYXJHcmFkaWVudD48cGF0aCBvcGFjaXR5PSIuMDQ5IiBmaWxsPSJ1cmwoI2MpIiBkPSJNMTQzNy0uNUw5NjIuMyA1Ni43SDE0Mzd6Ii8+PC9nPjwvc3ZnPg==), linear-gradient(to bottom right, #002da1, #026cdf, #002da1);
+    background-size: cover;
+}
+
+.background {
+    background-image: url('../lineup-list-img-01/abstract-black-stripes-diagonal-background-free-vector.webp');
+    background-size: cover;
+}
+
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-image: linear-gradient(to bottom left, #002da1, #026cdf, #002da1);
+}
+
+    .navbar a {
+        color: white;
+    }
+
+        .navbar a:hover {
+            color: white;
+        }
+
+.inputform input::placeholder {
+    font-size: 14px;
+    color: black;
+}
+
+
+.form-select {
+    max-width: 100%;
+}
+
+.inputform div,
+.inputform input {
+    border: none;
+    background-color: white;
+    opacity: .5;
+    padding: 5px;
+}
+
+.breadcrumb {
+    color: white;
+}
+
+.breadcrumb-item {
+    color: white;
+    font-size: 10px;
+}
+
+    .breadcrumb-item + .breadcrumb-item::before {
+        float: left;
+        padding-right: var(--bs-breadcrumb-item-padding-x);
+        color: white;
+        content: var(--bs-breadcrumb-divider, "/");
+    }
+
+    .breadcrumb-item a {
+        color: white;
+        text-decoration: none;
+        transition: .5s;
+    }
+
+        .breadcrumb-item a:hover {
+            color: #002da1;
+        }
+
+.inputform input {
+    border-radius: 0 200px 200px 0;
+    outline: none;
+}
+
+.inputform div {
+    border-radius: 200px 0 0 200px;
+}
+
+.inputform input:focus {
+    box-shadow: none;
+}
+
+.navbar-collapse ul li {
+    transition: .7s;
+}
+
+    .navbar-collapse ul li:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+
+.navbar-nav li:hover a {
+    color: white;
+    /* 保留連結內文字的原始顏色 */
+}
+
+
+.outerlink a {
+    font-size: 10px;
+    text-decoration: none;
+}
+
+.background * {
+    color: white;
+}
+
+
+
+.searchbox *:not(h1):not(h2) {
+    color: black;
+}
+
+.list-unstyled {
+    display: none;
+}
+
+.footermark {
+    display: none;
+}
+
+.footerspan :first-child {
+    display: inline;
+}
+
+.footerspan :last-child {
+    font-size: 14px;
+    text-decoration: none;
+    font-weight: bolder
+}
+
+.footerprivacy :first-child {
+    font-size: 14px;
+    text-decoration: none;
+    font-weight: bolder
+}
+
+.footerprivacy :last-child {
+    display: inline;
+}
+
+.footertext {
+    font-size: 12px;
+}
+
+/* .footericon {
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+        } */
+
+.fa-earth-asia {
+    display: none;
+}
+
+.footerpersonalinfo :first-child {
+    display: flex;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bolder;
+    text-decoration: none;
+}
+
+/* ----------------footer css---------------- */
+
+swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    swiper-slide img {
+        width: 100%;
+        object-fit: cover;
+    }
+
+swiper-container {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.swiperbtn {
+    position: absolute;
+    left: 68%;
+    bottom: 0px;
+}
+
+@media screen and (min-width: 768px) {
+    .lineup {
+        display: block;
+    }
+}
+
+@media (min-width: 992px) {
+    .ticket img {
+        vertical-align: top;
+        transition: 1s;
+        transform: scale(1);
+    }
+
+    .ticket:hover img {
+        transform: scale(1.2);
+    }
+
+    .ticket {
+        position: relative;
+        border: none;
+    }
+
+    .pic-text {
+        position: absolute;
+        background-color: black;
+        bottom: 5px;
+        left: 16px;
+        opacity: 0.6;
+        width: fit-content;
+    }
+
+        .pic-text :first-child {
+            padding: 3px 0px 0px 0px;
+            font-size: 16px;
+            color: white;
+        }
+
+        .pic-text :nth-child(2) {
+            padding: 0px 0px 3px 0px;
+            font-size: 14px;
+            color: white;
+        }
+
+    .drug {
+        width: 24%;
+        margin-left: 1%;
+    }
+
+    .list-unstyled {
+        display: block;
+    }
+
+        .list-unstyled :first-child {
+            margin-top: 50px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .list-unstyled li {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+    .footermark {
+        position: absolute;
+        top: 5%;
+        right: -5%;
+        display: inline;
+        font-size: 30px;
+        font-weight: bolder;
+    }
+
+    .footertext {
+        position: relative;
+    }
+
+    .footericon {
+        position: absolute;
+        top: 30%;
+        right: 0%;
+        margin-top: 0px;
+        display: inline;
+        width: 25%;
+    }
+
+    .fa-earth-asia {
+        display: none;
+        position: absolute;
+        top: 60%;
+    }
+}

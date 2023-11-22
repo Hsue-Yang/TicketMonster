@@ -1,0 +1,21 @@
+﻿@using TicketMonster.Web.ViewModels.Home;
+@model WidgetPartialViewModel
+
+<div class="row context mx-auto mt-5">
+    @foreach (var category in Model.CategoryName.Distinct())
+    {
+        var categoryId = Model.CategoryId.ElementAt(Model.CategoryName.ToList().IndexOf(category));
+
+        <h2 class="d-flex justify-content-between cardmain-title mt-3">
+            @category
+            <a class="text-decoration-none card-titleurl" href="~/Category/@categoryId">
+                See All @category
+            </a>
+        </h2>
+
+        @foreach (var item in Model.PerformerCards.Where(pc => pc.CategoryName == category))
+        {
+            <partial name="_PerformerCardPartial" model="item" />
+        }
+    }
+</div>

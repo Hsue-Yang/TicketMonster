@@ -1,0 +1,490 @@
+﻿<div class="container mt-5 col-9" id="app">
+<button v-on:click="createEvent" type="button" class="btn btn-primary ml-auto">新增至資料庫</button>
+<div class="row">
+
+<div class="form-group col-4">
+<label class="pb-1 pt-1">Event Name</label>
+<input v-model="createEventForm.EventName" type="text" class="form-control" required>
+</div>
+
+<div class="form-group col-4">
+<label class="pb-1 pt-1"> Category</label>
+<select v-model="createEventForm.CategoryId" class="form-control" v-on:change="updateSubcategories" required>
+<option value="" disabled selected>Select a Category</option>
+<option v-for="category in categories" :value="category.ID">{{ category.CategoryName }}</option>
+</select>
+</div>
+
+<div class="form-group col-4">
+<label class="pb-1 pt-1">SubCategory</label>
+<select v-model="createEventForm.SubCategoryId" class="form-control" required>
+<option value="" disabled selected>Select a Subcategory</option>
+<option v-for="subcategory in filteredSubcategories" :value="subcategory.ID">{{ subcategory.SubCategoryName }}</option>
+</select>
+</div>
+
+<div class="form-group col-4">
+<label class="pb-1 pt-1">Venue</label>
+<select v-model="createEventForm.VenueId" class="form-control" required>
+<option v-for="venue in venues" :value="venue.ID">{{ venue.VenueName }}</option>
+</select>
+</div>
+
+<div class="form-group col-4">
+<label class="pb-1 pt-1">Event Date</label>
+<input v-model="createEventForm.EventDate" type="date" class="form-control" required>
+</div>
+
+<div class="form-group col-4">
+<label class="pb-1 pt-1">Total Time</label>
+<input v-model="createEventForm.TotalTime" class="form-control" required>
+</div>
+
+<div class="form-group col-4">
+<label class="pb-1 pt-1">Performers</label>
+<div class="select-btn" v-on:click="toggleOpen">
+<span class="btn-text">{{ buttonText }}</span>
+<span class="arrow-dwn">
+<i class="fa-solid fa-chevron-down"></i>
+</span>
+</div>
+<ul class="list-items" v-show="isOpen">
+<li class="item" v-for="performer in filteredPerformers" :value="performer.ID" v-on:click="toggleItem(performer)" v-bind:class="{ 'checked': performer.checked }">
+<span class="checkbox">
+<i class="fa-solid fa-check check-icon"></i>
+</span>
+<span class="item-text">{{ performer.Name }}</span>
+</li>
+</ul>
+</div>
+
+
+<div class="form-group col-4">
+<label class="pb-1 pt-1">Pic Sort</label>
+<div class="col-12">
+<label class="btn btn-info">
+<input ref="fileInput" id="upload_img" style="display:none;" type="file" v-on:change="updatePreviewImages" multiple>
+<i class="fa fa-photo"></i> 選擇圖片
+</label>
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="form-group col-4">
+<label class="pb-1 pt-1 pe-3">EventSeats</label>
+<div v-for="(section, index) in createEventForm.Sections" :key="index" class="form-group">
+<input v-model="section.SectionName" type="text" class="form-control w-100 mb-1" :placeholder="getPlaceholder(section, index)" :value="getPlaceholder(section, index)" readonly>
+<input v-model="section.SectionPrice" type="text" class="form-control w-100 mb-1" :placeholder="getPricePlaceholder(section, index)" required>
+<input v-model="section.SectionCapacity" type="text" class="form-control w-100 mb-3" :placeholder="getCapacityPlaceholder(section, index)" required>
+<button type="button" class="btn btn-primary" v-on:click="removeSection(index)">Remove Section</button>
+</div>
+<button type="button" class="btn btn-primary" v-on:click="addSection(sportArena,theaterArena)">Add Section</button>
+</div>
+
+
+<div class="form-group">
+<label class="pb-1 pt-1">Preview Images</label>
+<div class="col-12">
+<div v-for="(image, index) in createEventForm.Images" :key="index">
+<img :src="image.Pic" class="col-9" />
+<button v-on:click="removeImage(index)" class="btn btn-danger">删除</button>
+<select v-model="image.sort" class="form-control col-5" required>
+<option>1</option>
+<option>2</option>
+<option>3</option>
+</select>
+</div>
+</div>
+</div>
+
+
+
+</div
+</div>
+@*
+<!-- IsDeleted -->
+<div class="form-group">
+<label>IsDeleted</label>
+<select v-model="createEventForm.IsDeleted" class="form-control" required>
+<option value="true">true</option>
+<option value="false">false</option>
+<!-- ... -->
+</select>
+</div>
+
+
+<!-- CreateBy -->
+<div class="form-group">
+<label for="CreateBy">CreateBy:</label>
+<select v-model="formData.CreateBy" class="form-control" id="CreateBy" name="CreateBy" required>
+<option value="1">tony</option>
+<option value="2">ricky</option>
+<!-- ... -->
+</select>
+</div>
+
+<!-- LastEditBy -->
+<div class="form-group">
+<label for="LastEditBy">LastEditBy:</label>
+<select v-model="formData.LastEditBy" class="form-control" id="LastEditBy" name="LastEditBy" required>
+<option value="1">tony</option>
+<option value="2">ricky</option>
+<!-- ... -->
+</select>
+</div>*@
+@section topCSS{
+    <style>
+
+    body {
+    background-color: #e3f2fd;
+    }
+
+    .select-btn {
+    display: flex;
+    height: 50px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #fff;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .select-btn .arrow-dwn {
+    display: flex;
+    border-radius: 50%;
+    background: #6e93f7;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+    }
+
+    .select-btn.open .arrow-dwn {
+    transform: rotate(-180deg);
+    }
+
+    .list-items {
+    position: relative;
+    margin-top: 15px;
+    border-radius: 8px;
+    padding: 16px;
+    background-color: #fff;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .select-btn.open ~ .list-items {
+    display: block;
+    }
+
+    .list-items .item {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    height: 50px;
+    cursor: pointer;
+    transition: 0.3s;
+    padding: 0 15px;
+    border-radius: 8px;
+    }
+
+    .list-items .item:hover {
+    background-color: #e7edfe;
+    }
+
+    .item .item-text {
+    font-size: 16px;
+    font-weight: 400;
+    color: #333;
+    }
+
+    .item .checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 16px;
+    width: 16px;
+    border-radius: 4px;
+    margin-right: 12px;
+    border: 1.5px solid #c0c0c0;
+    transition: all 0.3s ease-in-out;
+    }
+
+    .item.checked .checkbox {
+    background-color: #4070f4;
+    border-color: #4070f4;
+    }
+
+    .checkbox .check-icon {
+    color: #fff;
+    font-size: 11px;
+    transform: scale(0);
+    transition: all 0.2s ease-in-out;
+    }
+
+    .item.checked .check-icon {
+    transform: scale(1);
+    }
+ #toast-container > .toast-error { background-color: red; } 
+      #toast-container > .toast-success { background-color: green; } 
+        
+    </style>
+}
+
+@section endJS{
+    <script>
+             let app = Vue.createApp({
+        data() {
+        return {
+        createEventForm: {
+        "EventName": '',
+        "CategoryId": null,
+        "SubCategoryId": null,
+        "VenueId": 1,
+        "EventDate": '',
+        "TotalTime": '',
+        "IsDeleted": false,
+        "CreateBy": 'Ricky',
+        "LastEditBy": 'Ricky',
+        "Images": [],
+        "PerformersList": [],
+        "Sections": []
+        },
+        categories: [],
+        subcategories: [],
+        venues: [],
+        performers: [],
+        sportArena:["OutField","Middle","Inner"],
+        theaterArena:["Theater"],
+        isOpen: false
+
+        }
+        },
+        computed: {
+        filteredSubcategories() {
+        if (this.createEventForm.CategoryId !== null) {
+                return this.subcategories.filter(subcategory => subcategory.CatagoryID === this.createEventForm.CategoryId);
+
+        } else {
+        return [];
+        }
+        },
+                filteredPerformers() {
+            if (this.createEventForm.SubCategory !== null) {    
+                return this.performers.filter(performer => performer.SubCategoryID === this.createEventForm.SubCategoryId);
+
+            } else {
+            return [];
+            }
+            },
+        buttonText() {  
+        const checkedPerformers = this.performers.filter((performer) => performer.checked);
+        if (checkedPerformers.length > 0) {
+        return `${checkedPerformers.length} Selected`;
+        } else {
+        return 'Select Performer';
+        }
+        }
+        },
+        methods: {
+                     addSection(sportArena,theaterArena) {
+          if (this.createEventForm.Sections.length < 3) {      
+
+            if (this.createEventForm.CategoryId !== 3) {       
+              sectionName = sportArena[this.createEventForm.Sections.length];
+            } else {       
+              sectionName = theaterArena[this.createEventForm.Sections.length];
+            }
+
+            this.createEventForm.Sections.push({
+              SectionName: sectionName,
+              SectionPrice: '',
+              SectionCapacity: '',
+            });
+          }
+        },
+
+            getPlaceholder(section, index) {
+              if (this.createEventForm.CategoryId !== 3) {
+                return this.sportArena[index];
+              } else {
+                    return this.theaterArena[index];
+              }
+            },
+            getPricePlaceholder(section, index) {
+                    if (this.createEventForm.CategoryId !== 3) {
+                        return this.sportArena[index]+' Price';
+                  } else {
+                        return this.theaterArena[index]+' Price';
+                  }         
+            },
+            getCapacityPlaceholder(section, index) {
+                   if (this.createEventForm.CategoryId !== 3) {
+                            return this.sportArena[index]+' Counts';
+                      } else {
+                            return this.theaterArena[index]+' Counts';
+                      }     
+            },
+        removeSection(index) {
+        this.createEventForm.Sections.splice(index, 1);
+        },
+        updatePreviewImages() {
+
+        const files = this.$refs.fileInput.files;
+        if (files.length > 0) {
+        if (this.createEventForm.Images.length + files.length > 3) {
+        alert("只能上傳三張圖片");
+        return;
+        }
+
+        for (let i = 0; i < files.length; i++) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+        this.createEventForm.Images.push({
+        Pic: e.target.result,
+        file:files[i],
+        sort: 0
+        });
+        };
+        reader.readAsDataURL(files[i]);
+        }
+
+
+        }
+        },
+
+
+        removeImage(index) {
+        this.createEventForm.Images.splice(index, 1);
+        },
+
+
+
+
+        createEvent() {
+        const formData = new FormData();
+        for (let i = 0; i < this.createEventForm.Images.length; i++) {
+        formData.append('files', this.createEventForm.Images[i].file);
+        }
+
+        axios.post('/api/Photo/UploadMultiple', formData, {
+        headers: {
+        'Content-Type': 'multipart/form-data'
+        }
+        })
+
+
+        .then(response => {
+        console.log('圖片上傳成功', response.data);
+
+
+
+        for(let i = 0; i < response.data.imageUrls.length; i++) {
+        this.createEventForm.Images[i].Pic = response.data.imageUrls[i];
+        }
+
+
+        axios.post('/api/Create/CreateNewEvents', this.createEventForm)
+        .then(res => {
+        console.log(res);
+        if (res.status == 200) {
+        toastr.success("新增活動成功!!");  
+        window.location.href = "https://ticketmonsteradmin.azurewebsites.net/Dashboard/Index";
+        } else {
+        toastr.error("新增活動失敗!!");
+        }
+        });
+        })
+        .catch(error => {       
+        toastr.error("新增活動失敗!!");
+      
+        });
+        },
+
+
+
+
+        getAllCategory() {
+        axios.get('/api/Create/GetAllCategoryName')
+        .then(res => {
+        if (res.status == 200) {
+        this.categories = res.data;
+        console.log("成功", res.data)
+        }
+        })
+        .catch(error => {
+        console.error(error);
+        })
+        },
+
+        getAllSubCategory() {
+        axios.get('/api/Create/GetAllSubCategoryNameAndCategoryId')
+        .then(res => {
+        if (res.status == 200) {
+        this.subcategories = res.data;
+        console.log("成功", res.data);
+        }
+        })
+        .catch(error => {
+        console.error(error);
+        })
+        },
+        getAllPerformerName() {
+        axios.get('/api/Create/GetAllPerformerName')
+        .then(res => {
+        if (res.status == 200) {
+        this.performers = res.data.map(item => ({ ...item, checked: false }));
+        console.log("成功", res.data)
+        }
+        })
+        .catch(error => {
+        console.error(error);
+        })
+        },
+        toggleOpen() {
+        this.isOpen = !this.isOpen;
+        },
+        toggleItem(performer) {
+        performer.checked = !performer.checked;
+        this.createEventForm.PerformersList = this.performers.filter((performer) => performer.checked);
+        const originalPerformers = this.createEventForm.PerformersList;
+        const performersList = [];
+        for (const originalPerformer of originalPerformers) {
+        performersList.push({ Id: originalPerformer.ID });
+        }
+        const result = { PerformersList: performersList };
+        },
+
+        getAllVenue() {
+        axios.get('/api/Create/GetAllVenueName')
+        .then(res => {
+        if (res.status == 200) {
+        this.venues = res.data;
+        console.log("成功", res.data)
+        }
+        })
+        .catch(error => {
+        console.error(error);
+        })
+        }
+        },
+        mounted() {
+        this.getAllCategory();
+        this.getAllSubCategory();
+        this.getAllPerformerName()
+        this.getAllVenue();
+        }
+        }).mount('#app')
+
+    </script>
+}
+
+
+
+

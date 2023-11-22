@@ -1,0 +1,53 @@
+﻿body::-webkit-scrollbar {
+    display: none
+}
+
+button.active {
+    border-color: #026cdf !important
+}
+
+input:focus:not([readonly]), select:focus:not([readonly]) {
+    border-color: rgb(1, 80, 167) !important;
+    box-shadow: rgb(1, 80, 167) 0px 0px 4px 0px inset !important;
+}
+
+.form-floating > .form-control,
+.form-floating > .form-control-plaintext,
+.form-floating > .form-select {
+    min-height: 0 !important;
+    height: 2.5rem !important;
+}
+
+.form-floating > #showPassword {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+    height: 100%;
+    padding: 1rem .75rem;
+}
+
+div:where(.swal2-container).swal2-backdrop-show,
+div:where(.swal2-container) div:where(.swal2-popup) {
+    background: rgba(0,0,0,.9) !important
+}
+
+div:where(.swal2-container) div:where(.swal2-validation-message),
+div:where(.swal2-container) div:where(.swal2-validation-message)::before {
+    font-size: .87rem !important;
+    font-weight: initial !important;
+}
+
+div:where(.swal2-container) div:where(.swal2-validation-message) {
+    margin: 0 !important;
+    color: #f0f0f0 !important;
+    background: initial !important;
+}
+
+.fs-7 {
+    font-size: .87rem !important
+}
+
+[v-cloak] {
+    display: none;
+}

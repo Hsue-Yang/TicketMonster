@@ -1,0 +1,25 @@
+﻿@using Newtonsoft.Json;
+@using TicketMonster.ApplicationCore.Model;
+@model EcPayCreateOrderDto
+
+<script>
+    const orderObj = @Html.Raw(JsonConvert.SerializeObject(Model))
+        function createForm(orderObj) {
+            const myForm = document.createElement('form')
+            myForm.action = "https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5" 
+            myForm.method = 'POST'
+            Object.keys(orderObj).forEach(key => {
+
+                if (orderObj[key]) {
+                    const myInput = document.createElement('input')
+                    myInput.name = key
+                    myInput.value = orderObj[key]
+                    myInput.type = 'hidden'
+                    myForm.append(myInput)
+                }
+            })
+            document.body.append(myForm)
+        }
+    createForm(orderObj)
+    document.querySelector('form').submit();
+</script>

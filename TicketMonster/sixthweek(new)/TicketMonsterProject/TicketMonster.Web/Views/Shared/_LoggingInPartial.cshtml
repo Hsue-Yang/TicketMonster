@@ -1,0 +1,25 @@
+﻿<button class="nav-link d-flex align-items-center gap-2 m-0" data-bs-toggle="dropdown">
+    <img src="~/img/undraw_profile.svg" alt="profile" class="rounded-circle" style="width: 1.314rem">
+    <small class="text-truncate fs-6 max-width-8">
+        <strong>@ViewBag.currentUserName</strong>
+    </small>
+    <i class="fa-solid fa-angle-down"></i>
+</button>
+<div class="dropdown-menu">
+    <a asp-controller="User" asp-action="Account" class="nav-link">
+        <i class="fa-regular fa-user mx-2 ms-4 ms-lg-3"></i>
+        <span>My Account</span>
+    </a>
+    <a asp-controller="User" asp-action="RenewPassword" class="nav-link">
+        <i class="fa-solid fa-unlock-keyhole mx-2 ms-4 ms-lg-3"></i>
+        <span>Password</span>
+    </a>
+    <a asp-controller="User" asp-action="AccountSettings" class="nav-link">
+        <i class="fa-solid fa-gear mx-2 ms-4 ms-lg-3"></i>
+        <span>Settings</span>
+    </a>
+    <a asp-controller="Access" asp-action="Logout" class="nav-link">
+        <i class="fa-solid fa-arrow-right-from-bracket mx-2 ms-4 ms-lg-3"></i>
+        <span>Log Out</span>
+    </a>
+</div>

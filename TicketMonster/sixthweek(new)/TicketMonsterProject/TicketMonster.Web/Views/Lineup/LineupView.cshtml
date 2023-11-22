@@ -1,0 +1,518 @@
+﻿@using TicketMonster.Web.ViewModels.Lineup;
+
+@model CaIdOrEventIdViewModel
+@{
+	ViewData["Title"] = "Search";
+	ViewBag.Navbar = true;
+	ViewBag.Footer = true;
+}
+
+@section topCSS{
+
+	<link href="~/daterangepicker/daterangepicker.css" rel="stylesheet" />
+	<link href="~/css/lineup.css" rel="stylesheet" />
+}
+
+@section topJS{
+	<script src="~/daterangepicker/moment.js"></script>
+
+	<script src="~/daterangepicker/daterangepicker.js"></script>
+}
+
+@* 抓到此路由的參數 *@
+<div class="d-none" id="modelId">@Model.CategoryId</div>
+<div class="d-none" id="subId">@Model.SubCategoryId</div>
+
+<div class="container mt-lg-5" id="app">
+
+	
+	<div class="row mt-3">
+		<div class="sportList col-lg-9  col-12 ">
+			<div>
+
+				@* <p>All Sports Events Near <a href="">New York, NY</a> <span class="event-sum">(1425)</span></p> *@
+			</div>
+			<!-- 3 options -->
+			<div class="row">
+				<!--沒有則直接推到左邊 -->
+				<div class=" col-12 col-md-4 d-flex" v-if="!isKeyWord">
+
+					<!--當 sub陣列為 Null時,下拉選單不可以選 -->
+					<select class="form-select form-control " v-bind:disabled="OriginalList.SubCategories === null" style="max-height: 30vw;"
+							aria-label="Select Your Gene" id="subIdDropDown" v-model="selectSubCa" v-on:change="changeSelect">
+						<!--預設-->
+						<option v-if="OriginalList.SubCategories == null" value="">Select Your Genre</option>
+						
+						<option v-if="OriginalList.SubCategories != null" value="">Select Your Genre</option>
+						<!--當OriginalList.subCategories=Null 全部都一樣,取第一筆的 subCaName-->
+						@* <option v-if="OriginalList.SubCategories === null">{{OriginalList.Events[0].SubCaName}}</option> *@
+						<option v-for="sub in OriginalList.SubCategories" v-bind:value="sub.SubCaId">{{sub.SubCaName}}</option>
+					</select>
+
+
+
+
+				</div>
+				<!--datetimepicker-->
+				<div class="col-md-4 col-12 ">
+					<input type="text" class="form-control" name="dates" v-model="dateRange" v-on:click="updateDatimePicker" />
+				</div>
+				<div class="col-md-4 col-12 ">
+
+					<select class="form-select " aria-label="Select Your Distance" v-model="distance">
+
+						<option value="">Select Your Distance</option>
+						<option value="100km">100 km</option>
+						<option value="200km">200 km</option>
+						<option value="300km">300 km</option>
+
+
+					</select>
+
+				</div>
+				<div class="col-6 col-lg-8   col-md-9"></div>
+
+
+				<div class="col-lg-4 col-6 d-flex justify-content-end col-md-3  ">
+
+					<select class="form-control form-select my-2  ml-auto  " aria-label="Sort By: Date" v-model="orderBy">
+						<option value="Date">Sort By: Date</option>
+						<!-- popular要以 order內的eventid 的count去做
+							目前取出的資料無法得到計算
+							寫一個方法去計算 丟入 eventId 會得到在 order內的 count數量 並做大小排序
+						-->
+						@* <option value="popular">Most Popular</option> *@
+						@* <option value="distance">Distance</option> *@
+						<option value="timeDesc">Sort By: Date Descending</option>
+						<option value="nameAsc">Sort By: Name A-Z</option>
+						<option value="nameDesc">Sort By: Name Z-A</option>
+						<option value="distanceAsc">Sort By: Distance 近到遠</option>
+						<option value="distanceDesc">Sort BY: Distance 遠到近</option>
+					</select>
+				</div>
+
+			</div>
+			<!-- 賽程 list card -->
+			<div>
+				<!--未載入前轉圈-->
+					<div class="text-center mt-5" v-if="ifLoadingCom">
+						<div class="spinner-border" role="status">
+							<span class="visually-hidden">Loading...</span>
+						</div>
+					</div>
+				<div class="accordion " id="showlist" v-if="loaded">
+					<!--賽程-->
+
+					<div class="accordion-item " v-for="event in subList" v-if="subList.length !=0">
+						<div class="row">
+							<div class="col-md-10 col-12 ">
+								<h2 class="accordion-header">
+									<button class="accordion-button collapsed  " type="button"
+											data-bs-toggle="collapse" :data-bs-target="'#'+event.EventId" aria-expanded="true"
+											v-bind:aria-controls="event.EventId">
+										<div class="row col-12">
+
+											<div class="teamPic col-md-2 " v-if="event.EventPerformers[0] !== undefined">
+												<img class=" w-100 h-100" :src="event.EventPerformers[0].PerformerPicUrl" />
+											</div>
+											<div class="teamPic col-md-2 " v-else >
+												<!--當沒有圖片時,改成要放的廢圖-->
+												<img class=" w-100 h-100" src="https://res.cloudinary.com/dyd6mqssx/image/upload/v1695930415/no_Content1_ugk6x7.png" />
+											</div>
+											<div class="date col-lg-2 col-12">
+
+												<p class="monthday">
+													{{ getFormatMonth(event.EventDate)}}
+													<br><span class="">{{getFormatDateTime(event.EventDate)}}</span>
+												</p>
+
+											</div>
+											<div class="description col-lg-8 col-12">
+												<p>
+													{{event.EventName}}
+													<br><span>{{event.Venuename}}</span>
+												</p>
+											</div>
+										</div>
+									</button>
+								</h2>
+								<div v-bind:id="event.EventId" class="accordion-collapse collapse " data-bs-parent="#showlist">
+									<div class="accordion-body row">
+										<div class="lineup col-6">
+											<div>
+												<span>LINE UP</span>
+
+												<div class="d-flex row align-items-center" v-if="event.EventPerformers[0] !== undefined" v-for="performer in event.EventPerformers">
+													<div class="lineup col-md-2 mt-1 ">
+														<img style="border-radius: 50%;"
+															 v-bind:src="performer.PerformerPicUrl" alt="">
+													</div>
+													<div class="outerlink col-10 text-left   ">
+														<a class=""
+														   v-bind:href="'/Performer/'+performer.PerformerId">
+															{{performer.PerformerName}}
+														</a>
+													</div>
+												</div>
+												<div class="d-flex row align-items-center" v-else>
+
+													<div class="lineup col-md-2 " v-else>
+														<img style="border-radius: 50%;"
+															 src="https://res.cloudinary.com/dyd6mqssx/image/upload/v1695983537/No_image_available.svg_ikaov3.png" alt="">
+													</div>
+
+													<div class="outerlink col-10 text-left   ">
+														<span>暫無表演者資訊</span>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="venueinfo col-6">
+											<span>VENUE INFO</span>
+											<!-- 小圖示 -->
+											<div class="d-flex row">
+												<div class="col-1 d-none d-md-block">
+													<svg width="26" height="26" viewBox="0 0 26 26" role="img"
+														 class="event-tile__icon" aria-hidden="true">
+														<title id="IconTitle">venue</title>
+														<desc id="iconDescription">A venue vector icon</desc>
+														<g fill="none" fill-rule="evenodd"
+														   transform="translate(1 .85)">
+															<circle cx="12" cy="12.15" r="12.5" fill="#FAFAFA"
+																	stroke="#E0E0E0"></circle>
+															<path fill="#1f262d"
+																  d="M15.602 9.398a1.16 1.16 0 0 1-.852-.351 1.15 1.15 0 0 1-.352-.844c0-.333.118-.617.352-.851A1.16 1.16 0 0 1 15.602 7c.328 0 .609.117.843.352.235.234.352.518.352.851 0 .328-.117.61-.352.844a1.15 1.15 0 0 1-.843.351zm0-1.601c-.11 0-.204.039-.282.117a.393.393 0 0 0-.117.29c0 .109.04.202.117.28a.384.384 0 0 0 .282.118c.109 0 .203-.04.28-.118a.384.384 0 0 0 .118-.28c0-.115-.04-.212-.117-.29a.384.384 0 0 0-.281-.117zm0 6.406a.417.417 0 0 1-.305-.14 22.005 22.005 0 0 1-.406-.516c-.256-.328-.534-.76-.836-1.297-.209-.365-.39-.723-.547-1.074a9.25 9.25 0 0 1-.39-1.035 7.811 7.811 0 0 1-.24-.993 5.657 5.657 0 0 1-.081-.945c0-.39.074-.755.223-1.094.148-.338.348-.634.601-.886.253-.253.55-.453.89-.602a2.702 2.702 0 0 1 1.09-.223c.386 0 .748.075 1.086.223.339.149.636.35.891.602s.456.548.602.886c.146.339.218.703.218 1.094 0 .307-.026.623-.078.945-.052.323-.13.654-.234.993a9.25 9.25 0 0 1-.39 1.035c-.157.351-.34.71-.548 1.074-.307.536-.588.969-.843 1.297-.256.328-.388.5-.399.515a.538.538 0 0 1-.14.102.362.362 0 0 1-.164.04zm0-8c-.276 0-.536.052-.778.156a2.054 2.054 0 0 0-.636.426 1.974 1.974 0 0 0-.586 1.418c0 .505.074 1.01.222 1.512.149.502.328.972.54 1.41.21.438.43.832.66 1.184.229.351.421.631.578.84.156-.209.347-.489.574-.84.226-.352.445-.748.656-1.188.211-.44.392-.91.543-1.41a5.19 5.19 0 0 0 .227-1.508 1.974 1.974 0 0 0-.586-1.418 2.054 2.054 0 0 0-.637-.426 1.946 1.946 0 0 0-.777-.156zm3.195-2.406c.333 0 .617.117.851.351.235.235.352.519.352.852v13.602c0 .328-.117.609-.352.843a1.16 1.16 0 0 1-.851.352H5.203a1.16 1.16 0 0 1-.851-.352A1.15 1.15 0 0 1 4 18.602V5c0-.333.117-.617.352-.852a1.16 1.16 0 0 1 .851-.351h13.594zM9.203 18.203c.11 0 .203.04.281.117a.384.384 0 0 1 .118.282V19h1.601V4.602H9.602V5c0 .11-.04.203-.118.281a.384.384 0 0 1-.28.117.393.393 0 0 1-.29-.117A.384.384 0 0 1 8.797 5v-.398H7.203V19h1.594v-.398c0-.11.039-.204.117-.282a.393.393 0 0 1 .29-.117zm-2.805-1.601v-.805H4.797v.805h1.601zM12 15.797v.805h7.203v-.805H12zM19.203 5c0-.11-.039-.203-.117-.281a.393.393 0 0 0-.29-.117H12V15h7.203V5zm-14-.398c-.114 0-.21.039-.289.117A.384.384 0 0 0 4.797 5v10h1.601V4.602H5.203zm-.406 14c0 .109.039.203.117.28a.393.393 0 0 0 .29.118h1.194v-1.602H4.797v1.204zm14 .398c.114 0 .21-.04.289-.117a.384.384 0 0 0 .117-.281v-1.204H12V19h6.797zM9.203 7.797a.393.393 0 0 1-.289-.117.384.384 0 0 1-.117-.282v-.796c0-.11.039-.204.117-.282a.393.393 0 0 1 .29-.117c.109 0 .202.04.28.117a.384.384 0 0 1 .118.282v.796c0 .11-.04.204-.118.282a.384.384 0 0 1-.28.117zm0 2.406a.393.393 0 0 1-.289-.117.393.393 0 0 1-.117-.29V9c0-.11.039-.203.117-.281a.393.393 0 0 1 .29-.117c.109 0 .202.039.28.117A.384.384 0 0 1 9.602 9v.797c0 .114-.04.21-.118.289a.384.384 0 0 1-.28.117zm0 2.399a.393.393 0 0 1-.289-.118.384.384 0 0 1-.117-.28v-.806c0-.109.039-.203.117-.28a.393.393 0 0 1 .29-.118c.109 0 .202.04.28.117a.384.384 0 0 1 .118.281v.805c0 .11-.04.203-.118.281a.384.384 0 0 1-.28.118zm0 2.398a.393.393 0 0 1-.289-.117.384.384 0 0 1-.117-.281v-.805c0-.11.039-.203.117-.281a.393.393 0 0 1 .29-.118c.109 0 .202.04.28.118a.384.384 0 0 1 .118.28v.806c0 .109-.04.203-.118.28a.384.384 0 0 1-.28.118zm.399 1.203V17c0 .11-.04.203-.118.281a.384.384 0 0 1-.28.117.393.393 0 0 1-.29-.117.384.384 0 0 1-.117-.281v-.797c0-.114.039-.21.117-.289a.393.393 0 0 1 .29-.117c.109 0 .202.039.28.117a.393.393 0 0 1 .118.29z">
+															</path>
+														</g>
+													</svg>
+												</div>
+												<div class="outerlink col-10">
+													<a href="">{{event.Venuename}}</a>
+													<br> <span>{{event.VenueAddress}}</span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- See ticket 按鈕 -->
+
+							<div class="col-12 col-md-2 mt-3">
+								<a v-bind:href="'/Purchase?id='+event.EventId" class="seeticket btn">See Tickets</a> @* ~省略符號/同名controller/同名方法 *@
+							</div>
+
+						</div>
+					</div>
+
+					<div class=" pt-3" v-else>
+						<p>Sorry... there are currently no upcoming events.</p>
+						<img class="w-100 object-fit-contain" style="aspect-ratio:2/1" src="https://res.cloudinary.com/dyd6mqssx/image/upload/v1695930415/no_Content1_ugk6x7.png" />
+					</div>
+					<div class="col-12 d-flex mt-2">
+						<!--篩選大於可渲染時出現按鈕,沒有則隱藏-->
+						<button class="loadbtn  m-auto text-primary" v-on:click="getMoreBtn" v-if="filterCount > renderedCount">Load More</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 廣告區 -->
+		<div class="Ad  d-none d-lg-block col-lg-3 ">
+			<img class="w-100" src="https://res.cloudinary.com/dyd6mqssx/image/upload/v1694804024/ad_o49tpx.jpg" />
+		</div>
+	</div>
+</div>
+
+
+@section endJs{
+	<script src="~/lib/dayjs/dayjs.min.js"></script>
+	<script asp-append-version="true">
+		moment.updateLocale('zh-tw', {
+			// 改默認格式
+			longDateFormat: {
+				L: "YYYY/MM/DD",
+
+			}
+		});
+
+		Vue.createApp({
+			data: function () {
+				const startDate = moment().format('YYYY/MM/DD');
+				const endDate = moment().add(1, 'month').format('YYYY/MM/DD');
+				return {
+					// 整包 data資料
+					ifLoadingCom: true,
+					OriginalList: [],
+					selectSubCa: '',
+					isKeyWord: false,
+					loaded: false, // 當資料加載完畢才去取資料
+					renderedCount: 5, // 按下按鈕後 再渲染 5筆
+					dateRange: `${startDate} - ${endDate}`,
+					orderBy: "Date",
+					distance: "",
+					isDateChange: false,
+					filterCount: 0, // 篩選起始值
+				}
+			},
+			created: function () {
+				let subCategoryId = document.getElementById("subId").innerText;
+				this.selectSubCa = subCategoryId;
+				
+				// 取得使用者座標,試有沒有拿到
+				try {
+					this.geoFindMe() // 等待取得使用者位置
+						.then((res) => {
+
+							latitude = res[0] //取得使用者座標 緯度
+							longitude = res[1] //取得使用者座標 經度
+							// console.log(latitude)
+						})
+						.catch(e => {
+							console.log(e)
+						})
+
+				} catch (error) {
+					console.log('無法取得使用者位置：', error);
+				}
+
+			},
+			methods: {
+				getEventByCaId: function () {
+					let categoryId = document.getElementById("modelId").innerText
+					let subCategoryId = document.getElementById("subId").innerText
+					let vue = this;
+					let request = {
+						CategoryId: categoryId,
+						SubCategoryId: subCategoryId === '' ? null : subCategoryId
+					}
+					// 需與 viewModel內的名稱一致
+					axios.post('/Lineup/GetEventByCa', request)
+						.then(res => {
+
+							// console.log(res.data)
+							vue.OriginalList = res.data;
+							this.loaded = true;
+							this.ifLoadingCom = false;
+						});
+				},
+				getFormatMonth(dateString) {
+
+					let date = dayjs(dateString);
+					return date.format('MMM DD');
+
+				},
+				getFormatDateTime(dateString) {
+
+					let date = dayjs(dateString);
+					return date.format('ddd • h:mm a');
+
+				},
+				getMoreBtn() {
+					this.renderedCount += 5;
+				},
+				dateRangePicker: function () {
+					const today = dayjs();
+					const vue = this;
+					$('input[name="dates"]').daterangepicker({
+						format: "YYYY/MM/DD",
+						minDate: today,
+						ranges: {
+							'Today': [moment(), moment()],
+							'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+							'Futrue 7 Days': [moment(), moment().subtract(-6, 'days')],
+							'Future 30 Days': [moment(), moment().subtract(-29, 'days')],
+							'This Month': [moment().startOf('month'), moment().endOf('month')],
+							'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+						},
+						"showCustomRangeLabel": false,
+						"alwaysShowCalendars": true,
+						"startDate": moment(vue.dateRange.split(' - ')[0]),
+						"endDate": moment(vue.dateRange.split(' - ')[1])
+					}, function (start, end, label) {
+						// console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+						vue.dateRange = start.format('YYYY/MM/DD') + ' - ' + end.format('YYYY/MM/DD');
+						startime = start.format('YYYY-MM-DD')
+						endtime = end.format('YYYY-MM-DD')
+					});
+				},
+				// 使用者座標
+				geoFindMe() {
+					return new Promise((resolve, reject) => {
+						// var output = document.getElementById("out");
+
+						if (!navigator.geolocation) {
+							// output.innerHTML = "<p>Geolocation is not supported by your browser</p>";
+							return;
+						}
+						function success(position) {
+							let latitude = position.coords.latitude;
+							let longitude = position.coords.longitude;
+
+							// output.innerHTML =
+							//     "<p>Latitude is " +
+							//     latitude +
+							//     "° <br>Longitude is " +
+							//     longitude +
+							//     "°</p>";
+
+							return resolve([latitude, longitude])
+						}
+
+						function error() {
+							// output.innerHTML = "Unable to retrieve your location";
+							// 請求失敗放台北車站
+							latitude = 25.047643621132217    //緯度
+							longitude = 121.51406276440856  // 經度
+
+						}
+						// output.innerHTML = "<p>Locating…</p>";
+						navigator.geolocation.getCurrentPosition(success, error);
+					})
+				},
+				// 計算距離
+				calculateDis(userLat, userLon, venueLat, venueLon) {
+					const earthRadius = 6371;
+					const userLatRad = (userLat * Math.PI) / 180;
+					const userLonRad = (userLon * Math.PI) / 180;
+					const venueLatRad = (venueLat * Math.PI) / 180;
+					const venueLonRad = (venueLon * Math.PI) / 180;
+					let dLat = venueLatRad - userLatRad;
+					let dLon = venueLonRad - userLonRad;
+					const a =
+						Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+						Math.cos(userLatRad) * Math.cos(venueLatRad) *
+						Math.sin(dLon / 2) * Math.sin(dLon / 2);
+					// console.log(a)
+					const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+					// console.log(c)
+					let distance = earthRadius * c;
+					// console.log(distance)
+					return distance;
+				},
+				updateDatimePicker() {
+					this.isDateChange = true;
+				},
+				changeSelect: function () {
+					let categoryId = document.getElementById("modelId").innerText
+					if (this.selectSubCa == "") {
+						window.location.href = "/Category/" + categoryId
+					}
+					else {
+						window.location.href = "/Category/" + categoryId + "/" + this.selectSubCa
+					}
+				}
+
+
+			},
+			beforeMount: function () {
+				this.ifLoadingCom = true;
+			},
+			// 加載完直接執行, if判斷執行哪個
+			mounted: function () {
+				this.getEventByCaId()
+				
+				// 加載完後直接呼叫日曆
+				this.dateRangePicker()
+			},
+			computed: {
+				subList: function () {
+					
+					let result = this.OriginalList.Events;
+					
+					let dateRangeParts = this.dateRange.split(' - ');
+					let startDate = moment(dateRangeParts[0], 'YYYY/MM/DD');
+					let endDate = moment(dateRangeParts[1], 'YYYY/MM/DD');
+					result = result.filter(event => {
+						const eventDate = moment(event.EventDate, 'YYYY/MM/DD');
+						return eventDate.isSameOrAfter(startDate) && eventDate.isSameOrBefore(endDate);
+					});
+
+
+					if (this.distance !== '') {
+					const userLat = latitude;
+					const userLon = longitude;
+						result = result.filter(event => {
+							let venueLat = event.VenueLatitude;
+							let venueLon = event.VenueLongitude;
+							// 使用 caculateDis 方法计算距离
+							let calDistance = this.calculateDis(userLat, userLon, venueLat, venueLon)
+							// console.log(distance);
+
+							if (this.distance === '100km') {
+								return calDistance <= 100;
+							} else if (this.distance === '200km') {
+								return calDistance <= 200;
+							} else if (this.distance === '300km') {
+								return calDistance > 300;
+							}
+
+						});
+					}
+					// 資料數 = 篩選後的長度
+					this.filterCount = result.length;
+
+					//排序
+					if (this.orderBy === 'nameAsc') {
+						result.sort(function (a, b) {
+							return a.EventName > b.EventName ? 1 : -1;
+						})
+					}
+					else if (this.orderBy === 'nameDesc') {
+						result.sort(function (a, b) {
+							return a.EventName < b.EventName ? 1 : -1;
+						})
+					}
+					else if (this.orderBy === 'timeDesc') {
+						result.sort((a,b)=>{
+							return new Date(b.EventDate) - new Date(a.EventDate);
+						})
+					}
+					else if (this.orderBy === 'distanceAsc') {
+						result.sort((a, b) => {
+							let distanceA = this.calculateDis(latitude, longitude, a.VenueLatitude, a.VenueLongitude);
+							let distanceB = this.calculateDis(latitude, longitude, b.VenueLatitude, b.VenueLongitude);
+							return distanceA - distanceB;
+						})
+					}
+					else if (this.orderBy === 'distanceDesc') {
+						result.sort((a, b) => {
+							let distanceA = this.calculateDis(latitude, longitude, a.VenueLatitude, a.VenueLongitude);
+							let distanceB = this.calculateDis(latitude, longitude, b.VenueLatitude, b.VenueLongitude);
+							return distanceB - distanceA;
+						})
+					}
+					// 距離排序
+					return result.slice(0, this.renderedCount);
+				}
+			},
+		}).mount('#app')
+
+
+
+
+
+
+
+	</script>
+}
+
+
+@* @section endJS{
+    <script asp-append-version="true">
+
+        let subOption = document.getElementById("subIdDropDown");
+
+        subOption.addEventListener("change", function () {
+
+            var selectSubId = this.value;
+
+            // 在option上 自定義屬性, 在這邊拿到自訂義屬性的值
+            //         獲取所有的選項, 獲取當前選中的索引,  拿到自訂義的值
+            var caId = this.options[this.selectedIndex].getAttribute("data-caid");
+
+            // 將 window的網址改位置
+            window.location.href = "/Lineup/LineupView?id=" + caId + "&subId=" + selectSubId
+        })
+
+    </script>
+
+} *@

@@ -1,0 +1,39 @@
+﻿*::-webkit-scrollbar {
+    display: none
+}
+
+.mh-1 {
+    min-height: 1.5rem
+}
+
+[v-cloak] {
+    display: none
+}
+
+.slide-leave-active,
+.slide-enter-active {
+    transition: all .9s ease
+}
+
+.slide-enter-from {
+    transform: translateY(100%)
+}
+
+.slide-leave-to {
+    transform: translateY(-100%)
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 1.5s
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0
+}
+
+.fade-enter-to,
+.fade-leave-from {
+    opacity: 1
+}

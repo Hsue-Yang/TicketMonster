@@ -1,0 +1,896 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>My Tickets</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+          crossorigin="anonymous" />
+    <!-- font awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer" />
+    <style>
+        /*  */
+        .navbar {
+            background-image: linear-gradient( 256deg, rgb(0, 45, 161), rgb(2, 108, 223) 55%, rgb(0, 45, 161) );
+            width: 100%;
+        }
+
+        .navbar-scrolled {
+            background-color: red;
+        }
+
+        .navbar a {
+            color: white;
+        }
+
+            .navbar a:hover {
+                color: rgba(255, 255, 255, 0.8);
+            }
+
+            .navbar a:focus {
+                color: rgba(255, 255, 255, 0.8);
+            }
+
+        .inputform input::placeholder {
+            font-size: 14px;
+            color: black;
+        }
+
+        .outerlink a {
+            font-size: 10px;
+            text-decoration: none;
+        }
+
+        .inputform div,
+        .inputform input {
+            border: none;
+            background-color: white;
+            opacity: 0.5;
+            padding: 5px;
+        }
+
+        .inputform input {
+            border-radius: 0 200px 200px 0;
+            outline: none;
+        }
+
+        .inputform div {
+            border-radius: 200px 0 0 200px;
+        }
+
+        .inputform input:focus {
+            box-shadow: none;
+        }
+
+        .navbar-collapse ul li {
+            transition: 0.7s;
+        }
+
+            .navbar-collapse ul li:hover {
+                background-color: rgba(0, 0, 0, 0.1);
+            }
+
+        .navbar-nav li:hover a {
+            color: white;
+            /* 保留連結內文字的原始顏色 */
+        }
+
+        .personIcon {
+            fill: #fff;
+        }
+        /*  */
+        a {
+            text-decoration: none;
+            color: black;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .gridTable {
+            position: relative;
+            z-index: 0;
+            display: grid;
+            grid-template-rows: auto;
+            grid-template-columns: 100%;
+            background-color: rgb(246, 246, 246);
+        }
+
+        .ticketHeaderAllBlock {
+            z-index: -1;
+            grid-area: 1/1/2/-1;
+        }
+
+        .ticketHeaderBackground {
+            background-color: rgb(2, 77, 223);
+            background-image: linear-gradient( 89deg, rgb(1, 80, 167), rgb(2, 77, 223), rgb(1, 80, 167) );
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        /* 左側收合欄上方LOGO區塊 */
+        .ticketLogoBlock {
+            display: none;
+        }
+
+        .ticketMonsterIcon {
+            width: 40px;
+            height: 40px;
+            margin-left: -8px;
+            color: white;
+            fill: white;
+        }
+
+        .welcome p {
+            padding-top: 15px;
+            margin-bottom: 0;
+        }
+        /* 側邊收合欄區域 */
+        .ticketSide {
+            display: none;
+            background-color: #fff;
+            padding-bottom: 88px;
+            box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 10px 3px;
+        }
+
+        .accordion:nth-child(-n + 4):after {
+            display: block;
+            border-top: 1px solid rgb(191, 191, 191);
+            background-color: #fff;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            content: "";
+        }
+
+        .myTicketsIcon {
+            fill: gray;
+        }
+
+        .accordion-body {
+            padding-left: 60px;
+        }
+
+        .accordion-item .accordion-button {
+            font-weight: 900;
+            padding-bottom: 10px;
+            color: black;
+        }
+
+        .accordion-button:not(.collapsed) {
+            background-color: rgb(255, 255, 255);
+            box-shadow: none;
+        }
+
+        .accordion-button:hover {
+            background-color: rgb(246, 246, 246);
+        }
+
+        .accordion-button:nth-last-child(1):after {
+            display: none;
+        }
+
+        .accordion .btnRed {
+            color: red;
+        }
+
+        .accordion-button::after,
+        .accordion-button:not(.collapsed)::after {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%230c63e4'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+        }
+        /* My tickets標題區 */
+        .ticketHeader {
+            z-index: -1;
+            grid-area: 1/ 1 /2/-1;
+            padding-top: 24px;
+            font-size: 14px;
+            margin-bottom: 40px;
+        }
+
+        .breadcrumb-item.active a,
+        .breadcrumb-item.active,
+        .breadcrumb-item + .breadcrumb-item::before {
+            color: white;
+        }
+
+        .nav-item a {
+            color: #fff;
+        }
+
+        .nav.nav-tabs {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .nav-tabs .nav-item .nav-link:focus {
+            color: #fff;
+        }
+
+        .nav.nav-tabs .nav-link:hover {
+            color: #fff;
+            background-color: rgba(7, 169, 244, 0.4);
+        }
+        /* 門票資訊 */
+        .ticketCards {
+            padding-bottom: 88px;
+        }
+
+        .ticketCardsWrap {
+            padding-right: 30px;
+            margin-left: 0px;
+        }
+
+        .ticketCards svg {
+            top: 50%;
+            right: 16px;
+            transform: rotate(-90deg) translateX(50%);
+            fill: white;
+        }
+
+        .ticketCardImg {
+            position: absolute;
+            z-index: 0;
+            background-image: url(./Will-Image/dino-Mytickets.jpg);
+            width: calc(100% + 100px);
+            height: calc(100% + 100px);
+            background-position: center center;
+            background-size: cover;
+            transform: translate(-60px, -60px);
+            filter: blur(15px);
+        }
+
+        .orderID {
+            position: absolute;
+            width: 100%;
+            margin: 8px 0px 0px;
+            padding-right: 16px;
+            padding-left: 152px;
+            text-align: right;
+            font-size: 14px;
+            opacity: 0.75;
+            color: white;
+        }
+
+        .ticketCardsContext {
+            color: white;
+        }
+
+            .ticketCardsContext img {
+                position: relative;
+                z-index: 0;
+                display: block;
+                height: auto;
+                border-radius: 2px;
+                width: 120px;
+            }
+
+        .ticketCards ul {
+            margin: -16px 0px 0px;
+        }
+
+        figure {
+            position: relative;
+            overflow: hidden;
+            box-shadow: rgba(0, 0, 0, 0.3) -4px 4px 8px 0px;
+        }
+
+        .eventTime::before {
+            content: "- ";
+        }
+
+        .ticketCardsContextInfo {
+            padding-top: 10px;
+        }
+
+        @@media (min-width: 1050px) {
+            .gridTable {
+                grid-template-rows: auto auto 1fr;
+                grid-template-columns: minmax(60px, auto) 320px 56px minmax(0px, 50rem) minmax(60px, auto);
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .ticketLogoBlock {
+                display: flex;
+                flex-direction: column;
+                grid-area: 1/2/2/3;
+                justify-content: flex-end;
+                margin-top: 24px;
+                padding: 32px;
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+
+            .ticketSide {
+                display: block;
+                grid-area: 2/2/-1/3;
+            }
+
+            .ticketHeader {
+                grid-column: 4/5;
+            }
+
+            .ticketCards {
+                grid-area: 3/4/-1/5;
+            }
+
+            .ticketCardsWrap {
+                padding-right: 0px;
+                margin-left: -30px;
+            }
+        }
+
+        @@media (min-width: 768px) {
+            .ticketCardsContext {
+                display: flex;
+            }
+
+            .ticketCardsContextInfo {
+                padding-top: 0px;
+                padding-left: 20px;
+            }
+        }
+        /* footer */
+        .background {
+            width: 100%;
+            background-color: rgb(31, 38, 45);
+            background-size: cover;
+        }
+
+            .background * {
+                color: white;
+            }
+
+        .list-unstyled {
+            display: none;
+        }
+
+        /* ----------------footer css---------------- */
+
+        @@media (min-width: 992px) {
+            .ticket img {
+                vertical-align: top;
+                transition: 1s;
+                transform: scale(1);
+            }
+
+            .ticket:hover img {
+                transform: scale(1.2);
+            }
+
+            .ticket {
+                position: relative;
+                border: none;
+            }
+
+            .list-unstyled {
+                display: block;
+            }
+
+                .list-unstyled :first-child {
+                    margin-top: 50px;
+                    font-size: 16px;
+                    font-weight: bold;
+                }
+
+                .list-unstyled li {
+                    margin-top: 10px;
+                    font-size: 14px;
+                }
+
+            .footer-span {
+                border-top: 1px solid white;
+            }
+        }
+        /* footer */
+        @@media screen and (min-width: 768px) {
+            .accountNameYear {
+                text-align: center;
+            }
+
+            .EditProfileBtn {
+                display: flex;
+            }
+
+            .mainRight {
+                padding-left: 30px;
+            }
+        }
+
+        @@media screen and (max-width: 767px) {
+            .hiddenblockInCol {
+                display: none;
+            }
+
+            .accounttitle {
+                font-size: 24px;
+            }
+
+            .accountNameGp {
+                display: flex;
+            }
+
+            .accountName {
+                font-size: 16px;
+            }
+        }
+
+        @@media screen and (max-width: 1023px) {
+            .hiddenblockInMd {
+                display: none;
+            }
+
+            .hiddenfooterblock {
+                display: none;
+            }
+
+            .footerblockInLg {
+                font-size: 10px;
+            }
+        }
+
+        @@media screen and (min-width: 992px) {
+            .ticketImg {
+                position: relative;
+                width: 60%;
+                height: auto;
+            }
+        }
+        /* footerEnd */
+    </style>
+</head>
+<body>
+    <!-- 導覽列 -->
+    <nav class="navbar navbar-expand-lg sticky-top bg-primary">
+        <div class="container-fluid mx-2">
+            <a class="navbar-brand" href="@Url.Action("HomePageView", "HomePage")">TicketMonster</a>
+            <!-- 搜尋 -->
+            <button class="navbar-toggler order-2 order-xl-0"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#mainNavbar"
+                    aria-controls="mainNavbar"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse bg-md-transparent order-3"
+                 id="mainNavbar">
+                <form class="inputform d-flex pt-2" role="search">
+                    <div>
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                    <input class="form-control"
+                           type="search"
+                           placeholder="Find millions of live experiences"
+                           aria-label="search" />
+                </form>
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item hover">
+                        <a class="nav-link" href="#">Concerts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Sports</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Art & Theater</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle"
+                           href="#"
+                           role="button"
+                           data-bs-toggle="dropdown"
+                           aria-expanded="false">
+                            More
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item link-dark" href="#">Family</a></li>
+                            <li><a class="dropdown-item link-dark" href="#">VIP</a></li>
+                            <li>
+                                <a class="dropdown-item link-dark" href="#">Deals</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="profileName ms-auto d-flex align-items-center order-1 order-lg-3">
+                <div class="d-flex">
+                    <div>
+                        <a class="nav-link px-2 d-flex" href="#">
+                            <div class="px-2">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     width="24"
+                                     height="24"
+                                     viewBox="0 0 24 24">
+                                    <g fill="none" fill-rule="evenodd">
+                                        <path d="M24 0H0v24h24z"></path>
+                                        <path class="personIcon"
+                                              fill="#262626"
+                                              fill-opacity="1"
+                                              fill-rule="nonzero"
+                                              d="M12 23C5.925 23 1 18.075 1 12S5.925 1 12 1s11 4.925 11 11-4.925 11-11 11zm0-1c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm0-8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0-1a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 7.5a.5.5 0 1 1-1 0V19a6 6 0 1 1 12 0v1.5a.5.5 0 1 1-1 0V19a5 5 0 0 0-10 0v1.5z"></path>
+                                    </g>
+                                </svg>
+                            </div>
+                            XU
+                        </a>
+                    </div>
+                    <div>
+                        <a class="nav-link" href="#">Help </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- 主內容區塊 -->
+    <div>
+        <div class="main-context">
+            <div class="gridTable">
+                <!-- 整塊Header區域 -->
+                <div class="ticketHeaderAllBlock">
+                    <div class="ticketHeaderBackground"></div>
+                </div>
+                <!-- 左側收合欄上方LOGO區塊 -->
+                <div class="ticketLogoBlock">
+                    <svg class="ticketMonsterIcon"
+                         viewBox="0 0 24 24"
+                         width="1.5em"
+                         height="1.5em"
+                         aria-hidden="true"
+                         focusable="false">
+                        <path d="M11.23 17.47c0-.59.1-1.12.18-1.47l1.45-6.62h3.57l.63-2.88h-3.57l.98-4.5-4.28 1.38-.68 3.12H6.62L6 9.38h2.88L7.75 14.5a16.3 16.3 0 0 0-.5 3.52c0 2.92 1.9 3.98 4.6 3.98.69 0 1.46-.21 2.15-.36l.68-3.06c-.5.21-1.22.36-1.93.36-.9 0-1.52-.56-1.52-1.47z"></path>
+                    </svg>
+                    <div class="welcome mt-4">
+                        <p>
+                            <span class="text-white">Welcome back!</span>
+                            <span class="text-white d-block fw-bold">First Name</span>
+                        </p>
+                    </div>
+                </div>
+                <!-- 側邊收合欄區域 -->
+                <div class="ticketSide">
+                    <nav class="p-3">
+                        <!-- 側邊收合欄-My Tickets -->
+                        <div class="accordion" id="accordionExample1">
+                            <div class="accordion-item border-0">
+                                <button class="accordion-button btn"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#collapseOne"
+                                        aria-expanded="true"
+                                        aria-controls="collapseOne">
+                                    <div class="myTicketsIcon me-3">
+                                        <svg viewBox="0 0 24 24"
+                                             width="1.5em"
+                                             height="1.5em"
+                                             aria-hidden="true"
+                                             focusable="false"
+                                             class="BaseSvg-sc-yh8lnd-0 TicketsIcon___StyledBaseSvg-sc-o359im-0 lirSVu">
+                                            <path d="M1 4.11 15.6 1l.64 2.96L23 5.18l-2.73 15.36-.25.18-1.98 1.4-1 .7-.26.18-8.25-1.48-3.67.78L1 4.11ZM12.42 20.7l4 .72.76-.53 1.72-1.2L21.26 6.4l-4.69-.85 2.35 11.08-1.83 3.06-4.67 1ZM2.78 5.27l3.24 15.25 10.12-2.16 1.19-2L14.45 2.8 2.78 5.27Zm10.72 10.9-6.86 1.45-.3-1.47 6.85-1.46.3 1.47Zm.47-9.85L4.67 8.3l1.35 6.38 9.3-1.98-1.35-6.38Zm-6.8 6.57-.72-3.43L12.8 8.1l.73 3.44-6.36 1.35Zm5.14-2.12L8 11.7l-.32-1.47L12 9.3l.32 1.47Z"></path>
+                                        </svg>
+                                    </div>
+                                    My Tickets
+                                </button>
+                                <div id="collapseOne"
+                                     class="accordion-collapse collapse show"
+                                     aria-labelledby="headingOne"
+                                     data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <a href="#" class="d-block py-2">Upcoming Events</a>
+                                        <a href="#" class="d-block py-2">Past Events</a>
+                                        <a href="#" class="d-block py-2">My Listings</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 側邊收合欄-My Profiles -->
+                        <div class="accordion" id="accordionExample2">
+                            <div class="accordion-item border-0">
+                                <button class="accordion-button"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#collapseTwo"
+                                        aria-expanded="true"
+                                        aria-controls="collapseTwo">
+                                    <div class="myTicketsIcon me-3">
+                                        <svg viewBox="0 0 24 24"
+                                             width="1.5em"
+                                             height="1.5em"
+                                             aria-hidden="true"
+                                             focusable="false"
+                                             class="BaseSvg-sc-yh8lnd-0 IdCardIcon___StyledBaseSvg-sc-jnsaq9-0 lirSVu">
+                                            <path d="M23 4.25H1v15.5h14.65l4.3-.01L23 16.77V4.25ZM9 16.27v1.98H5v-1.98l.59-.52H8.4l.59.52Zm1.5-.68-1.52-1.34H5.02L3.5 15.59v2.66h-1V5.75h9v12.5h-1v-2.66ZM13 5.75h8.5v10.38l-2.16 2.11-3.7.01H13V5.75Zm-7.25 4.5a1.25 1.25 0 1 0 2.5 0 1.25 1.25 0 0 0-2.5 0ZM7 7.5A2.75 2.75 0 1 1 7 13a2.75 2.75 0 0 1 0-5.5Zm7 4.25h6.25v-1.5H14v1.5Zm4.72 2.5H14v-1.5h4.72v1.5Z"></path>
+                                        </svg>
+                                    </div>
+                                    My Profile
+                                </button>
+                                <div id="collapseTwo"
+                                     class="accordion-collapse collapse show"
+                                     aria-labelledby="headingTwo"
+                                     data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <a href="#" class="d-block py-2">Profile Details</a>
+                                        <a href="#" class="d-block py-2">Billing Information</a>
+                                        <a href="#" class="d-block py-2">Connected Accounts</a>
+                                        <a href="#" class="d-block py-2">Accessibility Requirements</a>
+                                        <a href="#" class="d-block py-2">Gift Card Balance</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 側邊收合欄-My Settings -->
+                        <div class="accordion" id="accordionExample3">
+                            <div class="accordion-item border-0">
+                                <button class="accordion-button"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#collapseThree"
+                                        aria-expanded="true"
+                                        aria-controls="collapseThree">
+                                    <div class="myTicketsIcon me-3">
+                                        <svg viewBox="0 0 24 24"
+                                             width="1.5em"
+                                             height="1.5em"
+                                             aria-hidden="true"
+                                             focusable="false"
+                                             class="BaseSvg-sc-yh8lnd-0 CogIcon___StyledBaseSvg-sc-61sguc-0 lirSVu">
+                                            <path d="m5.42 5.4 1.65-1.32 1.87 1.48 3.1-.7 1.03-2.15 2.06.47v2.38l2.49 1.99 2.33-.52.92 1.92L19 10.4v3.18l1.86 1.48-.92 1.92-2.32-.54-2.49 1.98v2.38l-2.05.47-1.04-2.14-3.1-.71-1.86 1.49-1.68-1.34 1.05-2.13-1.37-2.86-2.33-.52v-2.12l2.33-.54 1.37-2.86L5.42 5.4Zm-1.86-.43L4.8 7.55l-.76 1.57-2.78.65v4.5l2.79.61.75 1.56-1.26 2.55 3.54 2.84 2.23-1.79 1.7.39L12.25 23l4.37-1v-2.85l1.36-1.09 2.78.65 1.96-4.07-2.23-1.77v-1.74l2.24-1.75-1.95-4.06-2.79.62-1.37-1.1V2l-4.38-1L11 3.56l-1.7.4-2.24-1.78-3.5 2.8Zm12.07 4.77L12.4 7.7 8.78 8.97 7.52 12.6l2.04 3.24 3.8.42 2.7-2.7-.43-3.81ZM9.16 12.4l.79-2.26 2.26-.8 2.02 1.28.28 2.38-1.7 1.7-2.37-.27-1.28-2.03Z"></path>
+                                        </svg>
+                                    </div>
+                                    My Profile
+                                </button>
+                                <div id="collapseThree"
+                                     class="accordion-collapse collapse show"
+                                     aria-labelledby="headingThree"
+                                     data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <a href="#" class="d-block py-2">Manage Alerts</a>
+                                        <a href="#" class="d-block py-2">Manage Preferences</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 側邊收合欄-Sign Out -->
+                        <div class="accordion">
+                            <div class="accordion-item border-0">
+                                <button class="accordion-button btnRed" type="button">
+                                    <div class="myTicketsIcon me-3">
+                                        <svg class="BaseSvg-sc-yh8lnd-0 ExitIcon___StyledBaseSvg-sc-1sra210-0 lirSVu sc-19skoan-4 ffuIdy"
+                                             viewBox="0 0 24 24"
+                                             width="1.5em"
+                                             height="1.5em"
+                                             aria-hidden="true"
+                                             focusable="false">
+                                            <path d="M15.13 1H1v22h10.98l3.15-3.23V15h-1.5v4.16l-2.29 2.34H2.5v-19h11.13V9h1.5V1Zm3.4 6.47L23.06 12l-4.53 4.53-1.06-1.06 2.72-2.72H9v-1.5h11.19l-2.72-2.72 1.06-1.06Z"></path>
+                                        </svg>
+                                    </div>
+                                    Sign Out
+                                </button>
+                            </div>
+                        </div>
+                        <!-- 側邊收合欄-Need Help? -->
+                        <div class="accordion">
+                            <div class="accordion-item border-0">
+                                <button class="accordion-button" type="button">
+                                    <div class="myTicketsIcon me-3">
+                                        <svg class="BaseSvg-sc-yh8lnd-0 QuestionMarkCutCornerIcon___StyledBaseSvg-sc-16zdarm-0 lirSVu sc-19skoan-7 hcwkWx"
+                                             viewBox="0 0 24 24"
+                                             width="1.5em"
+                                             height="1.5em"
+                                             aria-hidden="true"
+                                             focusable="false">
+                                            <path d="M12.25 8a1.42 1.42 0 0 1 .24.02c.17.03.38.08.58.17.2.08.36.2.48.35.1.15.2.36.2.71 0 .67-.34 1.08-.92 1.79l-.04.05a4.7 4.7 0 0 0-1.29 3.16H13c0-.98.41-1.55.96-2.21l.1-.14c.52-.62 1.19-1.43 1.19-2.65a2.6 2.6 0 0 0-.5-1.6c-.31-.42-.7-.67-1.07-.84a3.77 3.77 0 0 0-1.38-.3l-.03-.01h-.04a1.98 1.98 0 0 0-.14 0 3.82 3.82 0 0 0-1.43.4c-.4.2-.82.5-1.14.99-.33.49-.52 1.1-.52 1.86h1.5c0-.5.12-.81.26-1.03.15-.22.35-.37.58-.49a2.32 2.32 0 0 1 .9-.23h.01Zm-.75 7.5V17H13v-1.5h-1.5Z M1 1h22v16.31L17.31 23H1V1Zm1.5 1.5v19h14.19l4.81-4.81V2.5h-19Z"></path>
+                                        </svg>
+                                    </div>
+                                    Need Help?
+                                </button>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+                <!-- My tickets標題區 -->
+                <header class="ticketHeader">
+                    <div>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb ps-3">
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    <a href="">Home</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    My Tickets
+                                </li>
+                            </ol>
+                        </nav>
+                        <h1 class="text-white py-3 fw-bolder fs-2 ps-3">My Tickets</h1>
+                        <nav>
+                            <ul class="nav nav-tabs">
+                                <li class="nav-item">
+                                    <a class="nav-link rounded-0 border-0"
+                                       aria-current="page"
+                                       href="#">Upcoming Events</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link rounded-0 border-0" href="#">Past Events</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link rounded-0 border-0" href="#">My Listings</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </header>
+                <!-- 門票資訊 -->
+                <div class="ticketCards">
+                    <div class="ticketCardsWrap">
+                        <ul>
+                            <li>
+                                <a href="#" class="position-relative">
+                                    <figure class="position-relative">
+                                        <div class="ticketCardImg"></div>
+                                        <div class="position-relative">
+                                            <p class="orderID fw-bolder">Order #50-21052/NY5</p>
+                                            <div class="ticketCardsContext p-3">
+                                                <div>
+                                                    <img src="./Will-Image/dino-Mytickets.jpg" alt="" />
+                                                </div>
+                                                <div class="ticketCardsContextInfo d-flex">
+                                                    <div class="d-flex flex-column fw-bolder fs-5">
+                                                        <span>NOV</span>
+                                                        <span>03</span>
+                                                    </div>
+                                                    <div class="d-flex flex-column ms-4 fw-bolder">
+                                                        <span>
+                                                            <div>
+                                                                <span>Fri</span>
+                                                                <span class="eventTime">7:00PM</span>
+                                                            </div>
+                                                        </span>
+                                                        <div class="d-flex flex-column">
+                                                            <span>Jurassic World Live Tour</span>
+                                                            <span>XL CENTER - Hartford, CT</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </figure>
+                                    <svg class="position-absolute"
+                                         viewBox="0 0 24 24"
+                                         width="2em"
+                                         height="2em"
+                                         aria-hidden="true"
+                                         focusable="false">
+                                        <path d="M3.47 8.26 4.53 7.2 12 14.67l7.47-7.47 1.06 1.06L12 16.8 3.47 8.26Z"></path>
+                                    </svg>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- footer -->
+        <div class="background">
+            <!-- footer list -->
+            <div class="container">
+                <div class="row col-10 mx-auto">
+                    <div class="col-3">
+                        <ul class="list-unstyled">
+                            <li class="fw-bolder mb-3">We're Here to Help</li>
+                            <li>Ticket Your Event</li>
+                            <li>FAQs</li>
+                            <li>Refunds and Exchanges</li>
+                            <li>Contact Us</li>
+                            <li>Gift Cards</li>
+                            <li>Do Not Sell or Share My Personal Information</li>
+                        </ul>
+                    </div>
+                    <div class="col-3">
+                        <ul class="list-unstyled">
+                            <li class="fw-bolder mb-3">Our Network</li>
+                            <li>Live Nation</li>
+                            <li>House of Blues</li>
+                            <li>Front Gate Tickets</li>
+                            <li>TicketWeb</li>
+                            <li>TicketsNow</li>
+                            <li>universe</li>
+                            <li>NFL Ticket Exchange</li>
+                            <li>NBATICKETS.com</li>
+                            <li>NHL Ticket Exchange</li>
+                        </ul>
+                    </div>
+                    <div class="col-3">
+                        <ul class="list-unstyled">
+                            <li class="fw-bolder mb-3">About Us</li>
+                            <li>Who We Are</li>
+                            <li>Insider Blog</li>
+                            <li>Work With Us</li>
+                            <li>Across the Globes</li>
+                            <li>Innovation</li>
+                            <li>Developer</li>
+                            <li>Privacy Policy</li>
+                        </ul>
+                    </div>
+                    <div class="col-3">
+                        <ul class="list-unstyled">
+                            <li class="fw-bolder mb-3">Friends & Partners</li>
+                            <li>PayPal</li>
+                            <li>Allianz</li>
+                            <li>AWS</li>
+                            <li>
+                                <span>Get Our App</span>
+                                <a href="#" class="px-1">
+                                    <i class="fa-brands fa-apple"></i>
+                                </a>
+
+                                <a href="https://play.google.com/store/apps/details?id=com.ticketmaster.mobile.android.na"
+                                   class="px-1">
+                                    <div class="d-inline align-top">
+                                        <svg viewBox="0 0 48 48" width="15" height="15">
+                                            <g>
+                                                <path fill="#4DB6AC"
+                                                      d="M 7.703125 4.042969 C 7.292969 4.148438 7 4.507813 7 5.121094 C 7 6.921875 7 23.914063 7 23.914063 C 7 23.914063 7 42.28125 7 43.089844 C 7 43.535156 7.195313 43.835938 7.5 43.945313 L 27.679688 23.882813 Z "></path>
+                                                <path fill="#DCE775"
+                                                      d="M 33.238281 18.359375 L 24.929688 13.5625 C 24.929688 13.5625 9.683594 4.761719 8.789063 4.242188 C 8.402344 4.019531 8.019531 3.960938 7.703125 4.042969 L 27.683594 23.882813 Z "></path>
+                                                <path fill="#D32F2F"
+                                                      d="M 8.417969 43.800781 C 8.949219 43.492188 23.699219 34.976563 33.28125 29.445313 L 27.679688 23.882813 L 7.5 43.945313 C 7.746094 44.039063 8.066406 44.003906 8.417969 43.800781 Z "></path>
+                                                <path fill="#FBC02D"
+                                                      d="M 41.398438 23.070313 C 40.601563 22.640625 33.296875 18.394531 33.296875 18.394531 L 33.238281 18.359375 L 27.679688 23.882813 L 33.28125 29.445313 C 37.714844 26.886719 41.042969 24.964844 41.339844 24.792969 C 42.285156 24.246094 42.195313 23.5 41.398438 23.070313 Z "></path>
+                                            </g>
+                                        </svg>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- footer span -->
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="footer-span d-flex justify-content-between mt-4 py-3">
+                            <div class="col-9 d-flex align-items-center justify-content-lg-around m-auto">
+                                <div>
+                                    <a href="#" class="fs-5 fw-bolder hiddenfooterblock">
+                                        ticketmonster<i class="fa-regular fa-registered fs-6"></i>
+                                    </a>
+                                </div>
+                                <div class="d-lg-flex footerblockInLg">
+                                    <p class="fs-6 px-3 m-0 text-center">
+                                        By continuing past this page, you agree to our Terms of
+                                        Use.
+                                    </p>
+                                    <p class="m-0 text-center">©Ticketmaster 2023</p>
+                                </div>
+                            </div>
+                            <div class="col-3 justify-content-around hiddenfooterblock">
+                                <a href="#"><i class="fa-brands fa-facebook p-3"></i></a>
+                                <a href="#"><i class="fa-brands fa-instagram p-3"></i></a>
+                                <a href="#"><i class="fa-brands fa-linkedin p-3"></i></a>
+                                <a href="#"><i class="fa-brands fa-youtube p-3"></i></a>
+                                <a href="#"><i class="fa-solid fa-comment p-3"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- footerend -->
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+            crossorigin="anonymous"></script>
+</body>
+</html>
