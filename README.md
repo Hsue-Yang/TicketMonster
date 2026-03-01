@@ -1,4 +1,4 @@
-<h1 align="center">Welcome to Hsueh Ren GitHub! 👋</h1>
+<h1 align="center">Welcome to Michael GitHub! 👋</h1>
 
 <h2>Table of Contents</h2>
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -7,7 +7,6 @@
 - [Introduction](#introduction)
   - [TicketMonster](#ticketMonster)
   - [Other Projects](#other-projects)
-- [Author](#author)
 - [Get In Touch](#get-in-touch)
 - [Languages and Tools](#languages-and-tools)
 
@@ -30,14 +29,11 @@ TicketMonster is a side project inspired by TicketMaster, designed to simulate a
   - **Data Management:** Leveraged LINQ and WebAPI for data filtering and efficient data handling with Entity Framework Core and Dapper.
   - **Admin Analytics:** Provided administrators with insightful charts using Vue.js and ECharts, powered by Axios and WebAPI for data requests.
 
-## Author
-
-[Hsueh Ren](https://github.com/Hsue-Yang) _github@Hsue-Yang.com_
 
 ## Get In Touch
 
 Feel free to reach out if you want to collaborate or just have a chat!  
-[LinkedIn](https://www.linkedin.com/in/hsueh-jen-yang-0ab967238/)
+[LinkedIn](https://www.linkedin.com/in/michaelyang84/)
 
 ## Languages and Tools
 
